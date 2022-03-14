@@ -8,8 +8,39 @@ from rest_framework.generics import DestroyAPIView
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.generics import RetrieveUpdateAPIView
 
-from accounts.models import Profile
-from accounts.serializers import ProfileSerializer
+from accounts.models import Profile, User
+from accounts.serializers import ProfileSerializer, UserSerializer
+
+
+# Users views
+class ListUserApiView(ListAPIView):
+    """User list api view"""
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class CreateUserApiView(CreateAPIView):
+    """User create api view"""
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UpdateUserApiView(UpdateAPIView):
+    """User update api view"""
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class RetrieveUpdateUserApiView(RetrieveUpdateAPIView):
+    """User retrieve and update api view"""
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class DestroyUserApiView(DestroyAPIView):
+    """User destroy api view"""
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 # Profiles views
@@ -48,7 +79,7 @@ class RetrieveUpdateProfileApiView(RetrieveUpdateAPIView):
 class RetrieveShorterConnectionFriend(APIView):
     """Shorter Connection Friend api view"""
 
-    def get_shorter_connection(self):
+    def get(self, request, format=None):
         """Get shorter connection"""
         try:
             user_id = self.kwargs.get('pk')

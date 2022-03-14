@@ -2,9 +2,14 @@
 from django.urls import path
 
 from accounts.views import ListProfileApiView, CreateProfileApiView, RetrieveProfileApiView, UpdateProfileApiView, \
-     RetrieveUpdateProfileApiView
+    RetrieveUpdateProfileApiView, ListUserApiView, CreateUserApiView, UpdateUserApiView, RetrieveUpdateUserApiView
 
 urlpatterns = [
+    path('user/', ListUserApiView.as_view(), name='account_list'),
+    path('user/create/', CreateUserApiView.as_view(), name='account_create'),
+    path('user/update/<int:pk>/', UpdateUserApiView.as_view(), name='account_update'),
+    path('user/retrieve_update/<int:pk>/', RetrieveUpdateUserApiView.as_view(), name='account_retrieve_update'),
+    # path('user/delete/<int:pk>/', DestroyUserApiView.as_view(), name='account_destroy'),
     path('profile/', ListProfileApiView.as_view(), name='profile_list'),
     path('profile/<int:user_id>/', RetrieveProfileApiView.as_view(), name='profile_details'),
     path('profile/create/', CreateProfileApiView.as_view(), name='profile_create'),

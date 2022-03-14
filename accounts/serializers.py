@@ -12,13 +12,16 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         """Meta class"""
         model = User
-        fields = ['id', 'username', 'email', 'password', 'is_superuser', 'is_staff', 'is_active']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password', 'is_superuser', 'is_staff',
+                  'is_active']
 
     def create(self, validated_data):
         """User create"""
         user = User(
-            email=validated_data['email'],
             username=validated_data['username'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            email=validated_data['email'],
             is_superuser=validated_data['is_superuser'],
             is_staff=validated_data['is_staff'],
             is_active=validated_data['is_active']
@@ -42,12 +45,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     """Profile serializer class"""
-    user = UserSerializer(read_only=True)
-    img = serializers.ImageField()
-    friends = UserSerializer(read_only=True, many=True)
+    # img = serializers.ImageField(use_url=True)
+    friends = UserSerializer(many=True, read_only=True)
 
     class Meta:
         """Meta class"""
         model = Profile
-        fields = ['id', 'user', 'user_id', 'phone', 'address', 'city', 'state', 'zipcode', 'available', 'img',
-                  'friends']
+        fields = ['id', 'user', 'phone', 'address', 'city', 'state', 'zipcode', 'available', 'friends']
