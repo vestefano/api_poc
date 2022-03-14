@@ -21,7 +21,12 @@ class Profile(models.Model):
     zipcode = models.CharField(max_length=5, blank=True, null=True, help_text='Zipcode field')
     available = models.BooleanField(default=True, help_text='User is available')
     img = CloudinaryField('img')
-    friends = models.ManyToManyField('self', blank=True, help_text='Friends relations')
 
     def __str__(self):
         return self.username
+
+
+class Friends(models.Model):
+    """Friends model"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
+    is_friend_of = models.ForeignKey(User, on_delete=models.CASCADE, related_name='is_friend_of')
