@@ -1,7 +1,7 @@
 """Accounts serializers"""
 from rest_framework import serializers
 
-from accounts.models import User, Profile
+from accounts.models import User, Profile, Friend
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -52,3 +52,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         """Meta class"""
         model = Profile
         fields = ['id', 'user', 'phone', 'address', 'city', 'state', 'zipcode', 'available', 'friends']
+
+
+class FriendsSerializer(serializers.ModelSerializer):
+    """Friends serializer class"""
+
+    class Meta:
+        """Meta class"""
+        model = Friend

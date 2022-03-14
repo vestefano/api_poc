@@ -26,7 +26,7 @@ class Profile(models.Model):
         return self.username
 
 
-class Friends(models.Model):
+class Friend(models.Model):
     """Friends model"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     is_friend_of = models.ForeignKey(User, on_delete=models.CASCADE, related_name='is_friend_of')
