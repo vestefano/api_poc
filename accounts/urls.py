@@ -4,6 +4,12 @@ from django.urls import path
 from accounts import views
 
 urlpatterns = [
+    path('manager/list', views.AdminListUserApiView.as_view(), name='account_manager_list'),
+    path('manager/create', views.AdminCreateUserApiView.as_view(), name='account_manager_create'),
+    path('manager/<int:pk>', views.AdminRetrieveUserApiView.as_view(), name='account_manager_details'),
+    path('manager/update/<int:pk>', views.AdminUpdateUserApiView.as_view(), name='account_manager_update'),
+    path('manager/delete/<int:pk>', views.AdminUpdateUserApiView.as_view(), name='account_manager_delete'),
+
     path('user/', views.ListUserApiView.as_view(), name='account_list'),
     path('user/create/', views.CreateUserApiView.as_view(), name='account_create'),
     path('user/<int:pk>/', views.RetrieveUserApiView.as_view(), name='account_details'),
