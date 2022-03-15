@@ -45,13 +45,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     """Profile serializer class"""
-    # img = serializers.ImageField(use_url=True)
-    friends = UserSerializer(many=True, read_only=True)
 
     class Meta:
         """Meta class"""
         model = Profile
-        fields = ['id', 'user', 'phone', 'address', 'city', 'state', 'zipcode', 'available', 'friends']
+        fields = ['id', 'user', 'phone', 'address', 'city', 'state', 'zipcode', 'available']
 
 
 class FriendsSerializer(serializers.ModelSerializer):
@@ -60,3 +58,4 @@ class FriendsSerializer(serializers.ModelSerializer):
     class Meta:
         """Meta class"""
         model = Friend
+        fields = ['user', 'is_friend_of']

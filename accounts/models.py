@@ -18,7 +18,7 @@ class Profile(models.Model):
     address = models.CharField(max_length=100, blank=True, null=True, help_text='Address field')
     city = models.CharField(max_length=100, blank=True, null=True, help_text='City field')
     state = models.CharField(max_length=2, blank=True, null=True, help_text='State field')
-    zipcode = models.CharField(max_length=5, blank=True, null=True, help_text='Zipcode field')
+    zipcode = models.CharField(max_length=10, blank=True, null=True, help_text='Zipcode field')
     available = models.BooleanField(default=True, help_text='User is available')
     img = CloudinaryField('img')
 

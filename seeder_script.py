@@ -41,9 +41,6 @@ def create_users(users_amount):
 
             created_user = requests.post(api_user_create_url, user_data)
             result_user = json.loads(created_user.content)
-            print(created_user)
-            print(created_user.content)
-            print(result_user)
 
             # Create profile
             # with tempfile.NamedTemporaryFile(suffix='.jpg', delete=True) as temp_image:
@@ -73,17 +70,46 @@ def create_users(users_amount):
                 "state": user.get_nat(),
                 "zipcode": user.get_zipcode(),
                 "available": 'true',
-                "friends": [2, 3]
             }
 
             created_profile = requests.post(api_profile_create_url, profile_data)
-            print(created_profile)
-            print(created_profile.content)
 
     except Exception as error:
         print(error)
 
 
+def assign_friendship():
+    """
+    This function assign friendship
+    :return: None
+    """
+    api_get_users_url = API_URL + '/api/user/'
+    api_url_friendsip = API_URL + '/api/friend/'
+
+    response = requests.get(api_get_users_url)
+    users = json.loads(response.content)
+    users_amount = len(users)
+
+    for user in users:
+        friends_amount = random.randrange(0, users_amount-1)
+
+        for i in range(1, friends_amount):
+            friend = random.choice(users)
+
+            while user['id'] == friend['id']:
+                friend = random.choice(users)
+
+            data = {
+                "user": user['id'],
+                "is_friend_of": friend['id']
+            }
+
+            friendships = requests.post(api_url_friendsip, data)
+
+    print(friendships)
+
+
 print('User amount')
 amount = input()
 create_users(int(amount))
+# assign_friendship()

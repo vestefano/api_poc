@@ -2,14 +2,15 @@
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import CreateAPIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.generics import DestroyAPIView
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.generics import RetrieveUpdateAPIView
 
-from accounts.models import Profile, User
-from accounts.serializers import ProfileSerializer, UserSerializer
+from accounts.models import Profile, User, Friend
+from accounts.serializers import ProfileSerializer, UserSerializer, FriendsSerializer
 
 
 # Users views
@@ -96,3 +97,9 @@ class RetrieveShorterConnectionFriend(APIView):
 
         except Profile.DoesNotExist:
             raise NotFound
+
+
+class ListCreateFriendApiView(ListCreateAPIView):
+    """Friend list  and create api view"""
+    queryset = Friend.objects.all()
+    serializer_class = FriendsSerializer
