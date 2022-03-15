@@ -43,16 +43,6 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 
-class ProfileSerializer(serializers.ModelSerializer):
-    """Profile serializer class"""
-    friends = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source='user.is_friend_of')
-
-    class Meta:
-        """Meta class"""
-        model = Profile
-        fields = ['id', 'user', 'phone', 'address', 'city', 'state', 'zipcode', 'available', 'friends']
-
-
 class FriendsSerializer(serializers.ModelSerializer):
     """Friends serializer class"""
 
@@ -60,3 +50,13 @@ class FriendsSerializer(serializers.ModelSerializer):
         """Meta class"""
         model = Friend
         fields = ['user', 'is_friend_of']
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    """Profile serializer class"""
+    friends = serializers.ListField(read_only=True, source='get_user_friends')
+
+    class Meta:
+        """Meta class"""
+        model = Profile
+        fields = ['id', 'user', 'phone', 'address', 'city', 'state', 'zipcode', 'available', 'friends']

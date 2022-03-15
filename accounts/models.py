@@ -25,8 +25,22 @@ class Profile(models.Model):
     def __str__(self):
         return self.username
 
+    def get_user_friends(self):
+        """Get user friends"""
+        return self.user.user.values_list('is_friend_of')
+
 
 class Friend(models.Model):
     """Friends model"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     is_friend_of = models.ForeignKey(User, on_delete=models.CASCADE, related_name='is_friend_of')
+
+    class Meta:
+        unique_together = ('user', 'is_friend_of',)
+
+    @staticmethod
+    def shorter_connection_friends(user_id, other_user_id):
+        """Shorter connection between users"""
+        user_knows = Friend.objects.filter(user_id=user_id).values('is_friend_of')
+        know_user = Friend.objects.filter(is_friend_of=other_user_id).values('user_id')
+        return user_knows.intersection(know_user)

@@ -1,4 +1,6 @@
 """Accounts views"""
+from django.http import JsonResponse, Http404
+
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
@@ -77,29 +79,31 @@ class RetrieveUpdateProfileApiView(RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
 
 
-class RetrieveShorterConnectionFriend(APIView):
-    """Shorter Connection Friend api view"""
-
-    def get(self, request, format=None):
-        """Get shorter connection"""
-        try:
-            user_id = self.kwargs.get('pk')
-            friend_id = self.kwargs.get('pk_friend')
-
-            user = Profile.objects.filter(pk=user_id)
-            friend = Profile.objects.filter(pk=friend_id)
-
-            shorter_connection = Profile.objects.filter(friends=user).filter(friends=friend)
-
-            serializer = ProfileSerializer(shorter_connection)
-
-            return serializer
-
-        except Profile.DoesNotExist:
-            raise NotFound
-
-
 class ListCreateFriendApiView(ListCreateAPIView):
     """Friend list  and create api view"""
     queryset = Friend.objects.all()
     serializer_class = FriendsSerializer
+
+
+def shorter_connection_friends(request, uid, ouid):
+    """
+    View for find shorter friends connections
+    :param request: Request
+    :param uid: user id
+    :param ouid: other user id
+    :return: Array of shorter connection friends
+    """
+    try:
+        User.objects.filter(pk=uid).exists()
+        User.objects.filter(pk=ouid).exists()
+    except User.DoesNotExist:
+        raise Http404
+
+    shorter_connection = Friend.shorter_connection_friends(user_id=uid, other_user_id=ouid)
+    print(shorter_connection)
+
+    response = {
+        'shorter_connection': str(shorter_connection.values_list('id'))
+    }
+
+    return JsonResponse(response)
