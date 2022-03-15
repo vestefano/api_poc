@@ -1,5 +1,6 @@
 """Accounts views"""
 from django.http import Http404
+from rest_framework import permissions
 from rest_framework.generics import CreateAPIView
 from rest_framework.generics import ListAPIView
 from rest_framework.generics import ListCreateAPIView
@@ -10,38 +11,54 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import Profile, User, Friend
+from accounts.permissions import IsOwnerOrAdmin, IsOwnerOrFriendOrAdmin
 from accounts.serializers import ProfileSerializer, UserSerializer, FriendsSerializer
 
 
 # Users views
 class ListUserApiView(ListAPIView):
     """User list api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+        permissions.IsAdminUser,
+    ]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class RetrieveUserApiView(RetrieveAPIView):
     """User list api view"""
-    lookup_field = 'id'
-    action = "retrieve"
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsOwnerOrFriendOrAdmin,
+    ]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class CreateUserApiView(CreateAPIView):
     """User create api view"""
+    permission_classes = [permissions.AllowAny, ]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class UpdateUserApiView(RetrieveUpdateAPIView):
     """User update api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsOwnerOrAdmin,
+    ]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class DestroyUserApiView(RetrieveDestroyAPIView):
     """User destroy api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsOwnerOrAdmin,
+    ]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -49,12 +66,20 @@ class DestroyUserApiView(RetrieveDestroyAPIView):
 # Profiles views
 class ListProfileApiView(ListAPIView):
     """Profile list api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+        permissions.IsAdminUser,
+    ]
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
 
 class RetrieveProfileApiView(RetrieveAPIView):
     """Profile list api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsOwnerOrFriendOrAdmin,
+    ]
     lookup_field = 'user_id'
     action = "retrieve"
     queryset = Profile.objects.all()
@@ -63,18 +88,29 @@ class RetrieveProfileApiView(RetrieveAPIView):
 
 class CreateProfileApiView(CreateAPIView):
     """Profile create api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
 
 class UpdateProfileApiView(RetrieveUpdateAPIView):
     """Profile update api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsOwnerOrAdmin,
+    ]
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
 
 class DestroyProfileApiView(RetrieveDestroyAPIView):
     """Profile delete api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsOwnerOrAdmin,
+    ]
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 

@@ -7,7 +7,15 @@ from cloudinary.models import CloudinaryField
 
 class User(AbstractUser, PermissionsMixin):
     """User model"""
-    pass
+
+    @property
+    def friends_id_list(self):
+        """Friends id list"""
+        return Friend.get_friends_id_list(self.id)
+
+    def is_friend(self, possible_friend_id):
+        """Is user friend of possible_friend_id"""
+        return Friend.is_friends(self.id, possible_friend_id)
 
 
 class Profile(models.Model):
@@ -27,7 +35,7 @@ class Profile(models.Model):
 
     def get_user_friends(self):
         """Get user friends"""
-        return self.user.user.values_list('is_friend_of')
+        return self.user.friends_id_list
 
 
 class Friend(models.Model):
@@ -44,3 +52,13 @@ class Friend(models.Model):
         user_knows = Friend.objects.filter(user_id=user_id).values('is_friend_of')
         know_user = Friend.objects.filter(is_friend_of=other_user_id).values('user_id')
         return user_knows.intersection(know_user)
+
+    @staticmethod
+    def is_friends(user_id, possible_friend_id):
+        """The user_id is friend of possible_friend_id"""
+        return Friend.objects.filter(user_id=user_id).filter(is_friend_of=possible_friend_id)
+
+    @staticmethod
+    def get_friends_id_list(user_id):
+        """Friends ids of user_id"""
+        return Friend.objects.filter(user_id=user_id).values_list('is_friend_of')
