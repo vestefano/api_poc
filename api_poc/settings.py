@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'cloudinary',
+    'coreapi',
     'accounts',
 ]
 
@@ -140,3 +142,10 @@ cloudinary.config(
   api_key="791867537367191",
   api_secret="pL2QqLj91TrWg3pLVxDsBxSlpc0"
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # <-- JWT Authentication
+    ],
+}
