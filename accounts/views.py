@@ -1,15 +1,13 @@
 """Accounts views"""
 from django.http import Http404
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework.generics import CreateAPIView
 from rest_framework.generics import ListAPIView
 from rest_framework.generics import ListCreateAPIView
-from rest_framework.generics import CreateAPIView
-from rest_framework.generics import UpdateAPIView
-from rest_framework.generics import DestroyAPIView
 from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveDestroyAPIView
 from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from accounts.models import Profile, User, Friend
 from accounts.serializers import ProfileSerializer, UserSerializer, FriendsSerializer
@@ -22,25 +20,27 @@ class ListUserApiView(ListAPIView):
     serializer_class = UserSerializer
 
 
+class RetrieveUserApiView(RetrieveAPIView):
+    """User list api view"""
+    lookup_field = 'id'
+    action = "retrieve"
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
 class CreateUserApiView(CreateAPIView):
     """User create api view"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
-class UpdateUserApiView(UpdateAPIView):
+class UpdateUserApiView(RetrieveUpdateAPIView):
     """User update api view"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
-class RetrieveUpdateUserApiView(RetrieveUpdateAPIView):
-    """User retrieve and update api view"""
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class DestroyUserApiView(DestroyAPIView):
+class DestroyUserApiView(RetrieveDestroyAPIView):
     """User destroy api view"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -67,14 +67,14 @@ class CreateProfileApiView(CreateAPIView):
     serializer_class = ProfileSerializer
 
 
-class UpdateProfileApiView(UpdateAPIView):
+class UpdateProfileApiView(RetrieveUpdateAPIView):
     """Profile update api view"""
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
 
-class RetrieveUpdateProfileApiView(RetrieveUpdateAPIView):
-    """Profile retrieve and update api view"""
+class DestroyProfileApiView(RetrieveDestroyAPIView):
+    """Profile delete api view"""
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 

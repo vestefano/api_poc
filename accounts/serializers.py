@@ -8,6 +8,9 @@ class UserSerializer(serializers.ModelSerializer):
     """User serializer"""
 
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
+    email = serializers.EmailField(required=True)
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
 
     class Meta:
         """Meta class"""
