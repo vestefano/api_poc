@@ -1,8 +1,8 @@
 """Accounts views"""
-from django.http import JsonResponse, Http404
+from django.http import Http404
 
-from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import CreateAPIView
@@ -85,25 +85,25 @@ class ListCreateFriendApiView(ListCreateAPIView):
     serializer_class = FriendsSerializer
 
 
-def shorter_connection_friends(request, uid, ouid):
-    """
-    View for find shorter friends connections
-    :param request: Request
-    :param uid: user id
-    :param ouid: other user id
-    :return: Array of shorter connection friends
-    """
-    try:
-        User.objects.filter(pk=uid).exists()
-        User.objects.filter(pk=ouid).exists()
-    except User.DoesNotExist:
-        raise Http404
+class ShorterConnectionFriends(APIView):
+    """Short connection friends view"""
 
-    shorter_connection = Friend.shorter_connection_friends(user_id=uid, other_user_id=ouid)
-    print(shorter_connection)
+    @staticmethod
+    def get(request, uid, ouid):
+        """
+        Return a list of shorter connection friends
+        :param ouid:
+        :param uid:
+        :param request: Request
+        :return: List of shorter connection friends
+        """
 
-    response = {
-        'shorter_connection': str(shorter_connection.values_list('id'))
-    }
+        uid_exists = User.objects.filter(pk=uid).exists()
+        ouid_exists = User.objects.filter(pk=ouid).exists()
 
-    return JsonResponse(response)
+        if not uid_exists or not ouid_exists:
+            raise Http404
+
+        shorter_connection = Friend.shorter_connection_friends(user_id=uid, other_user_id=ouid)
+
+        return Response(shorter_connection)

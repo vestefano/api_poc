@@ -19,6 +19,6 @@ urlpatterns = [
     # path('profile/shorter_connection/<int:pk>/<int:pk_friend>/', , name=''),
 
     path('friends/', views.ListCreateFriendApiView.as_view(), name='friend_list_create'),
-    path('shorter_connection/<int:uid>/<int:ouid>/', views.shorter_connection_friends,
+    path('shorter_connection/<int:uid>/<int:ouid>/', views.ShorterConnectionFriends.as_view(),
          name='shorter_connection_friends'),
 ]
