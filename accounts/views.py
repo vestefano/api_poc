@@ -185,9 +185,9 @@ class ShorterConnectionFriends(APIView):
     def get(request, uid, ouid):
         """
         Return a list of shorter connection friends
+        :param request: Request
         :param uid: User id
         :param ouid: Other user id
-        :param request: Request
         :return: List of shorter connection friends
         """
 
