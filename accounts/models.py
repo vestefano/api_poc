@@ -15,7 +15,7 @@ class User(AbstractUser, PermissionsMixin):
 
     def is_friend(self, possible_friend_id):
         """Is user friend of possible_friend_id"""
-        return Friend.is_friends(self.id, possible_friend_id)
+        return Friend.are_friends(self.id, possible_friend_id)
 
 
 class Profile(models.Model):
@@ -30,7 +30,7 @@ class Profile(models.Model):
     available = models.BooleanField(default=True, help_text='User is available')
     img = CloudinaryField('img')
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         return self.username
 
     def get_user_friends(self):
@@ -54,9 +54,9 @@ class Friend(models.Model):
         return user_knows.intersection(know_user)
 
     @staticmethod
-    def is_friends(user_id, possible_friend_id):
+    def are_friends(user_id, possible_friend_id):
         """The user_id is friend of possible_friend_id"""
-        return Friend.objects.filter(user_id=user_id).filter(is_friend_of=possible_friend_id)
+        return Friend.objects.filter(user_id=user_id).filter(is_friend_of=possible_friend_id).exists()
 
     @staticmethod
     def get_friends_id_list(user_id):
