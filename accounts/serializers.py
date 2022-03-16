@@ -100,8 +100,16 @@ class FriendsSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     """Profile serializer class"""
     friends = serializers.ListField(read_only=True, source='get_user_friends')
+    user = UserSerializer(read_only=True)
 
     class Meta:
         """Meta class"""
         model = Profile
         fields = ['id', 'user', 'phone', 'address', 'city', 'state', 'zipcode', 'available', 'friends']
+
+    def create(self, validated_data):
+        """Profile create"""
+        request = self.context.get('request', None)
+        profile = Profile(**validated_data, user_id=request.user.id)
+        profile.save()
+        return profile
