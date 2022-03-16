@@ -35,7 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         """User update"""
         for key in validated_data:
-            if key not in ['password', ]:
+            if key != 'password':
                 setattr(instance, key, validated_data[key])
 
         if validated_data.get('password', None):
@@ -57,8 +57,7 @@ class AdminUserSerializer(serializers.ModelSerializer):
     class Meta:
         """Meta class"""
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password', 'is_superuser', 'is_staff',
-                  'is_active']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password', 'is_superuser', 'is_active']
 
     def create(self, validated_data):
         """User create"""
@@ -78,7 +77,7 @@ class AdminUserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         """User update"""
         for key in validated_data:
-            if key not in ['password', ]:
+            if key != 'password':
                 setattr(instance, key, validated_data[key])
 
         if validated_data.get('password', None):
@@ -109,7 +108,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Profile create"""
-        request = self.context.get('request', None)
-        profile = Profile(**validated_data, user_id=request.user.id)
+        request = self.context.get('request')
+        profile = Profile(user_id=request.user.id, **validated_data)
         profile.save()
         return profile
