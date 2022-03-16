@@ -28,7 +28,7 @@ def main():
             '*/urls.py',
             'manage.py',
             '*_dev.*',
-            '*/admin',
+            '*/admin.py',
             '*/apps.py',
             'api_poc/*',
             'seeder_script.py'
