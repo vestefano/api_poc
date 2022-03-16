@@ -11,7 +11,7 @@ class ProfileModelTest(TestCase):
     def test_get_user_fiends(self):
         """Test get user friends"""
         user_friends = mock.Mock()
-        profile = mock.Mock(user=mock.Mock(user=mock.Mock(values_list=mock.Mock(return_value=user_friends))))
+        profile = mock.Mock(user=mock.Mock(friends_id_list=user_friends))
 
         result = Profile.get_user_friends(profile)
 
