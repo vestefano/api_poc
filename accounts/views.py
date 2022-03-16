@@ -168,12 +168,18 @@ class DestroyProfileApiView(RetrieveDestroyAPIView):
 
 class ListCreateFriendApiView(ListCreateAPIView):
     """Friend list  and create api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
     queryset = Friend.objects.all()
     serializer_class = FriendsSerializer
 
 
 class ShorterConnectionFriends(APIView):
     """Short connection friends view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
 
     @staticmethod
     def get(request, uid, ouid):
