@@ -4,7 +4,6 @@ from django.urls import path
 from accounts import views
 
 urlpatterns = [
-    path('user/', views.ListUserApiView.as_view(), name='account_list'),
     path('user/create/', views.CreateUserApiView.as_view(), name='account_create'),
     path('user/<int:pk>/', views.RetrieveUserApiView.as_view(), name='account_details'),
     path('user/update/<int:pk>/', views.UpdateUserApiView.as_view(), name='account_update'),

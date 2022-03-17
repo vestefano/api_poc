@@ -16,19 +16,11 @@ from accounts.serializers import ProfileSerializer, UserSerializer, FriendsSeria
 
 
 # Users views
-class ListUserApiView(ListAPIView):
-    """User list api view"""
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
 class RetrieveUserApiView(RetrieveAPIView):
     """User list api view"""
     permission_classes = [
         permissions.IsAuthenticated,
+        IsOwnerOrAdmin,
     ]
     queryset = User.objects.all()
     serializer_class = UserSerializer

@@ -1,6 +1,7 @@
-"""Unit test for serialiszers"""
-from django.test import TestCase
+"""Unit test for serializers"""
 import mock
+from django.test import TestCase
+from rest_framework import serializers
 
 from accounts.models import User, Profile
 from accounts.serializers import UserSerializer, AdminUserSerializer, ProfileSerializer
@@ -27,6 +28,19 @@ class UserSerializerTest(TestCase):
         user.set_password.assert_called_once_with(validated_data['password'])
         user.save.assert_called_once()
         self.assertEqual(user, result)
+
+    def test_create_without_password(self):
+        """Test UserSerializer create without password"""
+        validated_data = {
+            'username': 'JD',
+            'first_name': 'Jhon',
+            'last_name': 'Doe',
+            'email': 'jhon@email.com',
+        }
+        user_serializer = UserSerializer()
+
+        with self.assertRaises(serializers.ValidationError):
+            user_serializer.create(validated_data)
 
     def test_update(self):
         """Test UserSerializer update"""
@@ -89,6 +103,21 @@ class AdminUserSerializerTest(TestCase):
         user.set_password.assert_called_once_with(validated_data['password'])
         user.save.assert_called_once()
         self.assertEqual(user, result)
+
+    def test_create_without_password(self):
+        """Test AdminUserSerializer create without password"""
+        validated_data = {
+            'username': 'JD',
+            'first_name': 'Jhon',
+            'last_name': 'Doe',
+            'email': 'jhon@email.com',
+            'is_superuser': True,
+            'is_active': True,
+        }
+        admin_serializer = AdminUserSerializer()
+
+        with self.assertRaises(serializers.ValidationError):
+            admin_serializer.create(validated_data)
 
     def test_update(self):
         """Test AdminUserSerializer update"""

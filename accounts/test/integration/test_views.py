@@ -34,25 +34,6 @@ class UserApiViewsTest(TestCase):
             is_active=True,
         )
 
-    def test_list_users(self):
-        """Test list users endpoint"""
-        user = self.user
-
-        baker.make(User, username='Martha96', first_name='Martha', last_name='Doe', email='martha@example.com',
-                   password='top_secret!', is_superuser=False, is_staff=False, is_active=True)
-
-        baker.make(User, username='Mikael564', first_name='Mikael', last_name='Sans', email='mikael@example.com',
-                   password='top_secret!', is_superuser=True, is_staff=True, is_active=True)
-
-        url = reverse('account_list')
-        http_auth = get_request_credentials(user)
-        self.client.credentials(**http_auth)
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
-        self.assertMatchSnapshot(data)
-
     def test_owner_retrieve_account(self):
         """Test user retrieve her details"""
         user = self.user
@@ -77,9 +58,7 @@ class UserApiViewsTest(TestCase):
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
-        self.assertMatchSnapshot(data)
+        self.assertEqual(response.status_code, 403)
 
     def test_create_user(self):
         """Test create user"""
