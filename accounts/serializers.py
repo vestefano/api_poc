@@ -6,6 +6,7 @@ from accounts.models import User, Profile, Friend
 
 INVALID_CODE = 400
 FIELD_NOT_EMPTY = _('This field may not be blank.')
+INVALID_USER = _('This user already has a profile or is not authenticated')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -112,16 +113,21 @@ class ProfileSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(read_only=True, source='user.first_name')
     last_name = serializers.CharField(read_only=True, source='user.last_name')
     available = serializers.BooleanField(read_only=True, initial=True)
+    user_id = serializers.PrimaryKeyRelatedField(read_only=True, source='user.id')
 
     class Meta:
         """Meta class"""
         model = Profile
-        fields = ['id', 'first_name', 'last_name', 'phone', 'address', 'city', 'state', 'zipcode', 'available',
-                  'friends', 'img']
+        fields = ['user_id', 'first_name', 'last_name', 'phone', 'address', 'city', 'state', 'zipcode',
+                  'available', 'friends', 'img']
 
     def create(self, validated_data):
         """Profile create"""
         request = self.context['request']
+
+        if not request.user.id or Profile.objects.filter(user_id=request.user.id).exists():
+            raise serializers.ValidationError({"user": [INVALID_USER]}, code=INVALID_CODE)
+
         profile = Profile(user_id=request.user.id, **validated_data)
         profile.save()
         return profile

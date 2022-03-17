@@ -166,12 +166,28 @@ class ProfileSerializerTest(TestCase):
 
     def test_create(self):
         """Test create"""
-        user = mock.Mock(spec=User)
+        user = mock.Mock(spec=User, id=1)
         profile = mock.Mock(spec=Profile, save=mock.Mock())
         profile_serializer = mock.Mock(spec=ProfileSerializer, context={'request': user})
+        profile_exists = mock.Mock(exists=mock.Mock(return_value=False))
 
-        with mock.patch('accounts.serializers.Profile', return_value=profile):
+        with mock.patch('accounts.serializers.Profile', return_value=profile), \
+             mock.patch('accounts.serializers.Profile.objects.filter', return_value=profile_exists):
             result = ProfileSerializer.create(profile_serializer, {})
 
         profile.save.assert_called_once()
         self.assertEqual(profile, result)
+
+    def test_try_create_two_profiles(self):
+        """Test try create two profile for same user"""
+        user = mock.Mock(spec=User, id=1)
+        profile = mock.Mock(spec=Profile, save=mock.Mock())
+        profile_serializer = mock.Mock(spec=ProfileSerializer, context={'request': user})
+        profile_exists = mock.Mock(exists=mock.Mock(return_value=True))
+
+        with mock.patch('accounts.serializers.Profile', return_value=profile), \
+             mock.patch('accounts.serializers.Profile.objects.filter', return_value=profile_exists), \
+             self.assertRaises(serializers.ValidationError):
+            ProfileSerializer.create(profile_serializer, {})
+
+        profile.save.assert_not_called()

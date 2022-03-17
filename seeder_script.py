@@ -1,10 +1,6 @@
 """Seeder script for fill the DB"""
 import json
 import random
-import tempfile
-
-from urllib.request import urlopen
-from PIL import Image
 
 import requests
 from randomuser import RandomUser
@@ -12,104 +8,117 @@ from randomuser import RandomUser
 API_URL = 'http://localhost:8000'
 
 
-def create_users(users_amount):
-    """
-    This function create the users and booking in the rest api
-    :param users_amount: Number of users you want to generate
-    :return: None
-    """
-    try:
-        users = RandomUser.generate_users(users_amount)
-        api_user_create_url = API_URL + '/api/user/create/'
-        api_profile_create_url = API_URL + '/api/profile/create/'
+def get_request_credentials(username, password):
+    """Add the JWT to header for request"""
+    api_jwt_token = API_URL + '/api/jwt/token/'
 
-        for user in users:
-            is_admin = random.choice(['true', 'false'])
-            is_staff = random.choice(['true', 'false'])
+    data = {
+        "username": username,
+        "password": password,
+    }
 
-            # Create User
-            user_data = {
-                "username": user.get_username(),
-                "first_name": user.get_first_name(),
-                "last_name": user.get_last_name(),
-                "email": user.get_email(),
-                "password": user.get_password(),
-                "is_superuser": is_admin,
-                "is_staff": is_staff,
-                "is_active": 'true',
-            }
+    response = requests.post(api_jwt_token, data)
+    response_content = json.loads(response.content)
+    token = response_content['access']
 
-            created_user = requests.post(api_user_create_url, user_data)
-            result_user = json.loads(created_user.content)
-
-            # Create profile
-            # with tempfile.NamedTemporaryFile(suffix='.jpg', delete=True) as temp_image:
-            #     try:
-            #         resp = requests.get(user.get_picture(), stream=True).raw
-            #         print(user.get_picture())
-            #
-            #     except requests.exceptions.RequestException as e:
-            #         print('Algo salio mal')
-            #
-            #     try:
-            #         im = Image.open(resp)
-            #
-            #     except IOError:
-            #         print("Unable to open image")
-            #
-            #     # temp_image.write(im.save('sid.jpg', 'jpeg'))
-            #     im.save('sid.jpg', 'jpeg')
-
-            is_available = random.choice(['true', 'false'])
-
-            profile_data = {
-                "user": result_user.get('id'),
-                "phone": user.get_phone(),
-                "address": user.get_street(),
-                "city": user.get_city(),
-                "state": user.get_nat(),
-                "zipcode": user.get_zipcode(),
-                "available": 'true',
-            }
-
-            created_profile = requests.post(api_profile_create_url, profile_data)
-
-    except Exception as error:
-        print(error)
+    return {'Authorization': f'Bearer {token}'}
 
 
-def assign_friendship():
+def assign_friendship(friends_number, user_list):
     """
     This function assign friendship
     :return: None
     """
-    api_get_users_url = API_URL + '/api/user/'
-    api_url_friendsip = API_URL + '/api/friend/'
+    if friends_number == 0 or not user_list:
+        return
 
-    response = requests.get(api_get_users_url)
-    users = json.loads(response.content)
-    users_amount = len(users)
+    api_url_friendship = API_URL + '/api/friends/'
 
-    for user in users:
-        friends_amount = random.randrange(0, users_amount-1)
+    min_val = min(friends_number, len(user_list) - 1)
 
-        for i in range(1, friends_amount):
-            friend = random.choice(users)
+    friends_number = friends_number - 1 if friends_number == len(user_list) else min_val
 
-            while user['id'] == friend['id']:
-                friend = random.choice(users)
+    for user in user_list:
+
+        # Authentication
+        http_auth = get_request_credentials(user['username'], user['password'])
+
+        friends = user_list.copy()
+        friends.remove(user)
+
+        for i in range(0, friends_number):
+            friend = random.choice(friends)
 
             data = {
-                "user": user['id'],
-                "is_friend_of": friend['id']
+                "user": str(user['id']),
+                "is_friend_of": str(friend['id']),
             }
 
-            friendships = requests.post(api_url_friendsip, data)
+            requests.post(api_url_friendship, data, headers=http_auth)
 
-    print(friendships)
+            friends.remove(friend)
 
 
-print('User amount')
-amount = input()
-create_users(int(amount))
-# assign_friendship()
+def create_users(profiles_amount, friends_number):
+    """
+    This function creates users with their profiles and sends them to the API.
+    :param profiles_amount: Number of profiles you want to generate
+    :return: None
+    """
+    if profiles_amount == 0:
+        return
+
+    profiles = RandomUser.generate_users(profiles_amount)
+    api_user_create_url = API_URL + '/api/user/create/'
+    api_profile_create_url = API_URL + '/api/profile/create/'
+    user_list = []
+
+    for profile in profiles:
+        # Create User
+        user_data = {
+            "username": profile.get_username(),
+            "first_name": profile.get_first_name(),
+            "last_name": profile.get_last_name(),
+            "email": profile.get_email(),
+            "password": profile.get_password(),
+        }
+
+        response = requests.post(api_user_create_url, user_data)
+
+        user = json.loads(response.content)
+
+        user_list.append({
+            "id": user['id'],
+            "username": profile.get_username(),
+            "password": profile.get_password(),
+        })
+
+        # Authentication
+        http_auth = get_request_credentials(profile.get_username(), profile.get_password())
+
+        # Create profile
+        profile_data = {
+            "phone": profile.get_phone(),
+            "address": profile.get_street(),
+            "city": profile.get_city(),
+            "state": profile.get_nat(),
+            "zipcode": profile.get_zipcode(),
+            "img": profile.get_picture(),
+            "available": 'true',
+        }
+
+        requests.post(api_profile_create_url, profile_data, headers=http_auth)
+
+    assign_friendship(friends_number, user_list)
+
+    for user in user_list:
+        print(user)
+
+
+print('Profile amount')
+profile_amount = input()
+
+print('Friends amount')
+friends_number = input()
+
+create_users(int(profile_amount), int(friends_number))

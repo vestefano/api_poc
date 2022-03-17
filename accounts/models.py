@@ -59,4 +59,4 @@ class Friend(models.Model):
     @staticmethod
     def get_friends_id_list(user_id):
         """Friends ids of user_id"""
-        return Friend.objects.filter(user_id=user_id).values_list('is_friend_of')
+        return Friend.objects.filter(user_id=user_id).values_list('is_friend_of', flat=True)
