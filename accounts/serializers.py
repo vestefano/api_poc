@@ -1,13 +1,18 @@
 """Accounts serializers"""
+from django.utils.translation import gettext_lazy as _
+
 from rest_framework import serializers
 
 from accounts.models import User, Profile, Friend
+
+INVALID_CODE = 400
+FIELD_NOT_EMPTY = _('This field may not be blank.')
 
 
 class UserSerializer(serializers.ModelSerializer):
     """User serializer"""
 
-    password = serializers.CharField(required=True, write_only=True, style={'input_type': 'password'})
+    password = serializers.CharField(required=False, write_only=True, style={'input_type': 'password'})
     email = serializers.EmailField(required=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
@@ -19,6 +24,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """User create"""
+        if not validated_data.get('password', None):
+            raise serializers.ValidationError({'password': [FIELD_NOT_EMPTY]}, code=INVALID_CODE)
+
         user = User(
             username=validated_data['username'],
             first_name=validated_data['first_name'],
@@ -48,7 +56,7 @@ class UserSerializer(serializers.ModelSerializer):
 class AdminUserSerializer(serializers.ModelSerializer):
     """Admin user serializer"""
 
-    password = serializers.CharField(required=True, write_only=True, style={'input_type': 'password'})
+    password = serializers.CharField(required=False, write_only=True, style={'input_type': 'password'})
     email = serializers.EmailField(required=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
@@ -61,6 +69,9 @@ class AdminUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """User create"""
+        if not validated_data.get('password', None):
+            raise serializers.ValidationError({'password': [FIELD_NOT_EMPTY]}, code=INVALID_CODE)
+
         user = User(
             username=validated_data['username'],
             first_name=validated_data['first_name'],
@@ -99,16 +110,19 @@ class FriendsSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     """Profile serializer class"""
     friends = serializers.ListField(read_only=True, source='get_user_friends')
-    user = UserSerializer(read_only=True)
+    first_name = serializers.CharField(read_only=True, source='user.first_name')
+    last_name = serializers.CharField(read_only=True, source='user.last_name')
+    available = serializers.BooleanField(read_only=True, initial=True)
 
     class Meta:
         """Meta class"""
         model = Profile
-        fields = ['id', 'user', 'phone', 'address', 'city', 'state', 'zipcode', 'available', 'friends']
+        fields = ['id', 'first_name', 'last_name', 'phone', 'address', 'city', 'state', 'zipcode', 'available',
+                  'friends', 'img']
 
     def create(self, validated_data):
         """Profile create"""
-        request = self.context.get('request')
+        request = self.context['request']
         profile = Profile(user_id=request.user.id, **validated_data)
         profile.save()
         return profile

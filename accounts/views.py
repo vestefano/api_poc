@@ -20,12 +20,50 @@ class ListUserApiView(ListAPIView):
     """User list api view"""
     permission_classes = [
         permissions.IsAuthenticated,
-        permissions.IsAdminUser,
     ]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
+class RetrieveUserApiView(RetrieveAPIView):
+    """User list api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class CreateUserApiView(CreateAPIView):
+    """User create api view"""
+    permission_classes = [
+        permissions.AllowAny,
+    ]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UpdateUserApiView(RetrieveUpdateAPIView):
+    """User update api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsOwnerOrAdmin,
+    ]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class DestroyUserApiView(RetrieveDestroyAPIView):
+    """User destroy api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsOwnerOrAdmin,
+    ]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+# Admin user views
 class AdminListUserApiView(ListAPIView):
     """Admin user list api view"""
     permission_classes = [
@@ -36,16 +74,6 @@ class AdminListUserApiView(ListAPIView):
     serializer_class = AdminUserSerializer
 
 
-class RetrieveUserApiView(RetrieveAPIView):
-    """User list api view"""
-    permission_classes = [
-        permissions.IsAuthenticated,
-        IsOwnerOrFriendOrAdmin,
-    ]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
 class AdminRetrieveUserApiView(RetrieveAPIView):
     """Admin user list api view"""
     permission_classes = [
@@ -54,13 +82,6 @@ class AdminRetrieveUserApiView(RetrieveAPIView):
     ]
     queryset = User.objects.all()
     serializer_class = AdminUserSerializer
-
-
-class CreateUserApiView(CreateAPIView):
-    """User create api view"""
-    permission_classes = [permissions.AllowAny, ]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
 
 class AdminCreateUserApiView(CreateAPIView):
@@ -74,16 +95,6 @@ class AdminCreateUserApiView(CreateAPIView):
     serializer_class = AdminUserSerializer
 
 
-class UpdateUserApiView(RetrieveUpdateAPIView):
-    """User update api view"""
-    permission_classes = [
-        permissions.IsAuthenticated,
-        IsOwnerOrAdmin,
-    ]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
 class AdminUpdateUserApiView(RetrieveUpdateAPIView):
     """Admin user update api view"""
     permission_classes = [
@@ -92,16 +103,6 @@ class AdminUpdateUserApiView(RetrieveUpdateAPIView):
     ]
     queryset = User.objects.all()
     serializer_class = AdminUserSerializer
-
-
-class DestroyUserApiView(RetrieveDestroyAPIView):
-    """User destroy api view"""
-    permission_classes = [
-        permissions.IsAuthenticated,
-        IsOwnerOrAdmin,
-    ]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
 
 class AdminDestroyUserApiView(RetrieveDestroyAPIView):
@@ -119,7 +120,6 @@ class ListProfileApiView(ListAPIView):
     """Profile list api view"""
     permission_classes = [
         permissions.IsAuthenticated,
-        permissions.IsAdminUser,
     ]
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
@@ -129,7 +129,7 @@ class RetrieveProfileApiView(RetrieveAPIView):
     """Profile list api view"""
     permission_classes = [
         permissions.IsAuthenticated,
-        IsOwnerOrFriendOrAdmin,
+        IsOwnerOrAdmin,
     ]
     lookup_field = 'user_id'
     action = "retrieve"
@@ -152,6 +152,8 @@ class UpdateProfileApiView(RetrieveUpdateAPIView):
         permissions.IsAuthenticated,
         IsOwnerOrAdmin,
     ]
+    lookup_field = 'user_id'
+    action = "retrieve"
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
@@ -162,10 +164,13 @@ class DestroyProfileApiView(RetrieveDestroyAPIView):
         permissions.IsAuthenticated,
         IsOwnerOrAdmin,
     ]
+    lookup_field = 'user_id'
+    action = "retrieve"
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
 
+# Friends views
 class ListCreateFriendApiView(ListCreateAPIView):
     """Friend list  and create api view"""
     permission_classes = [

@@ -12,9 +12,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
-    'cloudinary',
     'coreapi',
     'accounts',
 ]
@@ -130,16 +126,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Add cloudinary config
-cloudinary.config(
-    cloud_name="travel-developer",
-    api_key="791867537367191",
-    api_secret="pL2QqLj91TrWg3pLVxDsBxSlpc0"
-)
-
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',  # <-- JWT Authentication
     ],
 }
+
+# This is for snapshottest of integration test
+TEST_RUNNER = 'snapshottest.django.TestRunner'

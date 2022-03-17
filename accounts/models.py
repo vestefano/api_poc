@@ -1,8 +1,6 @@
 """Accounts models"""
-from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
-
-from cloudinary.models import CloudinaryField
+from django.db import models
 
 
 class User(AbstractUser, PermissionsMixin):
@@ -28,7 +26,7 @@ class Profile(models.Model):
     state = models.CharField(max_length=2, blank=True, null=True, help_text='State field')
     zipcode = models.CharField(max_length=10, blank=True, null=True, help_text='Zipcode field')
     available = models.BooleanField(default=True, help_text='User is available')
-    img = CloudinaryField('img')
+    img = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):  # pragma: no cover
         return self.username
@@ -49,9 +47,9 @@ class Friend(models.Model):
     @staticmethod
     def shorter_connection_friends(user_id, other_user_id):
         """Shorter connection between users"""
-        user_knows = Friend.objects.filter(user_id=user_id).values('is_friend_of')
-        know_user = Friend.objects.filter(is_friend_of=other_user_id).values('user_id')
-        return user_knows.intersection(know_user)
+        user_knows = Friend.objects.filter(user_id=user_id).values_list('is_friend_of', flat=True)
+        know_other_user = Friend.objects.filter(is_friend_of=other_user_id).values_list('user_id', flat=True)
+        return user_knows.intersection(know_other_user)
 
     @staticmethod
     def are_friends(user_id, possible_friend_id):

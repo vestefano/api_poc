@@ -49,11 +49,11 @@ class FriendModelTest(TestCase):
         """Test for shorter connection friends"""
         shorter_connection = mock.Mock()
         friends = mock.Mock(intersection=mock.Mock(return_value=shorter_connection))
-        values = mock.Mock(values=mock.Mock(return_value=friends))
+        values_list = mock.Mock(values_list=mock.Mock(return_value=friends))
         user = mock.Mock(spec=User, id=1)
         other_user = mock.Mock(spec=User, id=2)
 
-        with mock.patch('accounts.models.Friend.objects.filter', return_value=values):
+        with mock.patch('accounts.models.Friend.objects.filter', return_value=values_list):
             result = Friend.shorter_connection_friends(user.id, other_user.id)
 
         self.assertEqual(shorter_connection, result)
