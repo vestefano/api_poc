@@ -1,11 +1,12 @@
 """Integration test for views"""
 import json
-from django.urls import reverse
+
 from django.test import skipIfDBFeature
-from snapshottest.django import TestCase
+from django.urls import reverse
 from model_bakery import baker
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
+from snapshottest.django import TestCase
 
 from accounts.models import User, Profile, Friend
 
