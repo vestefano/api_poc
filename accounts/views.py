@@ -11,11 +11,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import Profile, User, Friend
-from accounts.permissions import IsOwnerOrAdmin, IsOwnerOrFriendOrAdmin
+from accounts.permissions import IsOwnerOrAdmin
 from accounts.serializers import ProfileSerializer, UserSerializer, FriendsSerializer, AdminUserSerializer
 
 
 # Users views
+from accounts.utils import FriendsConnections
+
+
 class RetrieveUserApiView(RetrieveAPIView):
     """User list api view"""
     permission_classes = [
@@ -194,6 +197,6 @@ class ShorterConnectionFriends(APIView):
         if not uid_exists or not ouid_exists:
             raise Http404
 
-        shorter_connection = Friend.shorter_connection_friends(user_id=uid, other_user_id=ouid)
+        shorter_connection = FriendsConnections.shorter_connection(user_id=uid, other_user_id=ouid)
 
         return Response(shorter_connection)
