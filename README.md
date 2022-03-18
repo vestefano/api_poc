@@ -58,6 +58,7 @@ it is going to run, it is necessary to have the virtual environment active with 
 ```bash
 python seeder_script.py
 ```
+
 When the seeder finishes, a list will appear with the username and password data of each user that I created, as shown 
 below:
 ```bash
@@ -67,3 +68,8 @@ below:
 {'id': 66, 'username': 'brownrabbit327', 'password': 'qaz123'}
 {'id': 67, 'username': 'happyostrich517', 'password': '123456'}
 ```
+
+The seeder is passed the following parameters:
+- The url of the api, in case nothing is passed to it, it is assumed to be ```http://localhost:8000```
+- The number of profiles you want
+- The number of friends each profile should have
