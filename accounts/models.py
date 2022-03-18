@@ -45,13 +45,6 @@ class Friend(models.Model):
         unique_together = ('user', 'is_friend_of',)
 
     @staticmethod
-    def shorter_connection_friends(user_id, other_user_id):
-        """Shorter connection between users"""
-        user_knows = Friend.objects.filter(user_id=user_id).values_list('is_friend_of', flat=True)
-        know_other_user = Friend.objects.filter(is_friend_of=other_user_id).values_list('user_id', flat=True)
-        return user_knows.intersection(know_other_user)
-
-    @staticmethod
     def are_friends(user_id, possible_friend_id):
         """The user_id is friend of possible_friend_id"""
         return Friend.objects.filter(user_id=user_id).filter(is_friend_of=possible_friend_id).exists()

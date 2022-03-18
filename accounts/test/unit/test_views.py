@@ -25,6 +25,6 @@ class ShorterConnectionFriendsTest(TestCase):
         exists = mock.Mock(return_value=False)
 
         with mock.patch('accounts.views.User.objects.filter', return_value=mock.Mock(exists=exists)), \
-             mock.patch('accounts.views.Friend.shorter_connection_friends', return_value=mock.Mock()), \
+             mock.patch('accounts.views.FriendsConnections.shorter_connection', return_value=mock.Mock()), \
              self.assertRaises(Http404):
             ShorterConnectionFriends.get(mock.Mock(), 1, 2)

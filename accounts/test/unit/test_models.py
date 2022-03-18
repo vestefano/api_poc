@@ -45,19 +45,6 @@ class ProfileModelTest(TestCase):
 class FriendModelTest(TestCase):
     """Test for Friend Model"""
 
-    def test_shorter_connection_friends(self):
-        """Test for shorter connection friends"""
-        shorter_connection = mock.Mock()
-        friends = mock.Mock(intersection=mock.Mock(return_value=shorter_connection))
-        values_list = mock.Mock(values_list=mock.Mock(return_value=friends))
-        user = mock.Mock(spec=User, id=1)
-        other_user = mock.Mock(spec=User, id=2)
-
-        with mock.patch('accounts.models.Friend.objects.filter', return_value=values_list):
-            result = Friend.shorter_connection_friends(user.id, other_user.id)
-
-        self.assertEqual(shorter_connection, result)
-
     def test_are_friends(self):
         """Test for are_friends"""
         user = mock.Mock(spec=User, id=1)
