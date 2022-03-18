@@ -59,7 +59,7 @@ it is going to run, it is necessary to have the virtual environment active with 
 python seeder_script.py
 ```
 
-When the seeder finishes, a list will appear with the username and password data of each user that I created, as shown 
+When the seeder finishes, a list will appear with the username and password data of each user that it was created, as shown 
 below:
 ```bash
 {'id': 63, 'username': 'sadmouse851', 'password': 'spoon'}
