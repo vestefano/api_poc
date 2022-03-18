@@ -5,12 +5,10 @@ import random
 import requests
 from randomuser import RandomUser
 
-API_URL = 'http://localhost:8000'
 
-
-def get_request_credentials(username, password):
+def get_request_credentials(api_url, username, password):
     """Add the JWT to header for request"""
-    api_jwt_token = API_URL + '/api/jwt/token/'
+    api_jwt_token = api_url + '/api/jwt/token/'
 
     data = {
         "username": username,
@@ -24,7 +22,7 @@ def get_request_credentials(username, password):
     return {'Authorization': f'Bearer {token}'}
 
 
-def assign_friendship(friends_number, user_list):
+def assign_friendship(api_url, friends_number, user_list):
     """
     This function assign friendship
     :return: None
@@ -32,7 +30,7 @@ def assign_friendship(friends_number, user_list):
     if friends_number == 0 or not user_list:
         return
 
-    api_url_friendship = API_URL + '/api/friends/'
+    api_url_friendship = api_url + '/api/friends/'
 
     min_val = min(friends_number, len(user_list) - 1)
 
@@ -41,7 +39,7 @@ def assign_friendship(friends_number, user_list):
     for user in user_list:
 
         # Authentication
-        http_auth = get_request_credentials(user['username'], user['password'])
+        http_auth = get_request_credentials(api_url, user['username'], user['password'])
 
         friends = user_list.copy()
         friends.remove(user)
@@ -59,7 +57,7 @@ def assign_friendship(friends_number, user_list):
             friends.remove(friend)
 
 
-def create_users(profiles_amount, friends_number):
+def create_users(api_url, profiles_amount, friends_number):
     """
     This function creates users with their profiles and sends them to the API.
     :param profiles_amount: Number of profiles you want to generate
@@ -69,8 +67,8 @@ def create_users(profiles_amount, friends_number):
         return
 
     profiles = RandomUser.generate_users(profiles_amount)
-    api_user_create_url = API_URL + '/api/user/create/'
-    api_profile_create_url = API_URL + '/api/profile/create/'
+    api_user_create_url = api_url + '/api/user/create/'
+    api_profile_create_url = api_url + '/api/profile/create/'
     user_list = []
 
     for profile in profiles:
@@ -94,7 +92,7 @@ def create_users(profiles_amount, friends_number):
         })
 
         # Authentication
-        http_auth = get_request_credentials(profile.get_username(), profile.get_password())
+        http_auth = get_request_credentials(api_url, profile.get_username(), profile.get_password())
 
         # Create profile
         profile_data = {
@@ -109,11 +107,14 @@ def create_users(profiles_amount, friends_number):
 
         requests.post(api_profile_create_url, profile_data, headers=http_auth)
 
-    assign_friendship(friends_number, user_list)
+    assign_friendship(api_url, friends_number, user_list)
 
     for user in user_list:
         print(user)
 
+
+print('Api url like # http://localhost:8000')
+api_url = input()
 
 print('Profile amount')
 profile_amount = input()
@@ -121,4 +122,7 @@ profile_amount = input()
 print('Friends amount')
 friends_number = input()
 
-create_users(int(profile_amount), int(friends_number))
+if not api_url:
+    api_url = 'http://localhost:8000'
+
+create_users(api_url, int(profile_amount), int(friends_number))
