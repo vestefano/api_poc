@@ -30,7 +30,7 @@ python manage.py runserver
 >Note: By default the api starts running on port 8000. The api documentation can be found at 
 http://localhost:8000/docs/
 
-### Run test
+## Run test
 ```bash
 python manage.py test
 
@@ -45,7 +45,7 @@ python manage.py test --keepdb --settings=api_poc.settings_mocked_dev
 accessing the api documentation. In the project there is an administration layer, to access those entry 
 points you must have an admin user. 
 
-### Create admin user
+## Create admin user
 ```bash
 // after the migrations
 python manage.py createsuperuser
