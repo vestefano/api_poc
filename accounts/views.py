@@ -177,9 +177,9 @@ class ListCreateFriendApiView(ListCreateAPIView):
 
 class ShorterConnectionFriends(APIView):
     """Short connection friends view"""
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
+    # permission_classes = [
+    #     permissions.IsAuthenticated,
+    # ]
 
     @staticmethod
     def get(request, uid, ouid):
@@ -190,6 +190,10 @@ class ShorterConnectionFriends(APIView):
         :param ouid: Other user id
         :return: List of shorter connection friends
         """
+        shorter_connection = []
+
+        if uid == ouid:
+            return Response(shorter_connection)
 
         uid_exists = User.objects.filter(pk=uid).exists()
         ouid_exists = User.objects.filter(pk=ouid).exists()

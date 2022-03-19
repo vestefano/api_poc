@@ -28,3 +28,11 @@ class ShorterConnectionFriendsTest(TestCase):
              mock.patch('accounts.views.FriendsConnections.shorter_connection', return_value=mock.Mock()), \
              self.assertRaises(Http404):
             ShorterConnectionFriends.get(mock.Mock(), 1, 2)
+
+    def test_get_when_send_same_ids(self):
+        """Test get when send the same ids"""
+        response = mock.Mock()
+        with mock.patch('accounts.views.Response', return_value=response):
+            shorter_connection = ShorterConnectionFriends.get(mock.Mock(), 1, 1)
+
+        self.assertEqual(shorter_connection, response)
