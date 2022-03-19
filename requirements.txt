@@ -5,8 +5,10 @@ charset-normalizer==2.0.12
 coreapi==2.3.3
 coreschema==0.0.4
 coverage==6.3.2
+dj-database-url==0.5.0
 Django==4.0.3
 django-mock-queries==2.1.7
+django-on-heroku==1.1.2
 djangorestframework==3.13.1
 djangorestframework-simplejwt==5.1.0
 fastdiff==0.3.0
@@ -17,6 +19,7 @@ MarkupSafe==2.1.1
 mock==4.0.3
 model-bakery==1.4.0
 Pillow==9.0.1
+psycopg2-binary==2.9.3
 PyJWT==2.3.0
 pytz==2021.3
 randomuser==1.6
@@ -29,3 +32,4 @@ uritemplate==4.1.1
 urllib3==1.26.8
 wasmer==1.1.0
 wasmer_compiler_cranelift==1.1.0
+whitenoise==6.0.0
