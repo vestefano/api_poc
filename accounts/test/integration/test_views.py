@@ -515,255 +515,144 @@ class FriendsApiViewsTest(TestCase):
         super(FriendsApiViewsTest, self).setUp()
         self.client = APIClient()
 
-    def test_create_friends(self):
-        """Test create friends"""
+        # Test users
+        self.user_roberto = baker.make(User, username='Roberto646', first_name='Roberto', last_name='Doe',
+                                       email='martha@example.com', password='top_secret!', is_superuser=True,
+                                       is_staff=True, is_active=True)
 
-        user_roberto = baker.make(User, username='Roberto646', first_name='Roberto', last_name='Doe',
-                                  email='martha@example.com', password='top_secret!', is_superuser=True,
-                                  is_staff=True, is_active=True)
+        self.user_ana = baker.make(User, username='Ana564', first_name='Ana', last_name='Sans',
+                                   email='mikael@example.com', password='top_secret!', is_superuser=False,
+                                   is_staff=False, is_active=True)
 
-        user_ana = baker.make(User, username='Ana564', first_name='Ana', last_name='Sans',
-                              email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
-                              is_active=True)
+        self.user_juan = baker.make(User, username='Juan564', first_name='Juan', last_name='Sans',
+                                    email='mikael@example.com', password='top_secret!', is_superuser=False,
+                                    is_staff=False, is_active=True)
 
-        user_juan = baker.make(User, username='Juan564', first_name='Juan', last_name='Sans',
-                               email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
-                               is_active=True)
+        self.user_maykel = baker.make(User, username='Maykel564', first_name='Maykel', last_name='Sans',
+                                      email='mikael@example.com', password='top_secret!', is_superuser=False,
+                                      is_staff=False, is_active=True)
 
-        user_maykel = baker.make(User, username='Maykel564', first_name='Maykel', last_name='Sans',
-                                 email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
-                                 is_active=True)
+        self.user_leo = baker.make(User, username='Leo564', first_name='Leo', last_name='Sans',
+                                   email='mikael@example.com', password='top_secret!', is_superuser=False,
+                                   is_staff=False, is_active=True)
 
-        user_leo = baker.make(User, username='Leo564', first_name='Leo', last_name='Sans',
-                              email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
-                              is_active=True)
-
-        url = reverse('friend_list_create')
-
-        body = {
-            "user": user_roberto.id,
-            "is_friend_of": user_ana.id,
-        }
-
-        http_auth = get_request_credentials(user_roberto)
-        self.client.credentials(**http_auth)
-        response = self.client.post(url, body)
-        self.assertEqual(response.status_code, 201)
-        self.assertTrue(user_roberto.is_friend(user_ana))
-
-        body = {
-            "user": user_roberto.id,
-            "is_friend_of": user_juan.id,
-        }
-
-        response = self.client.post(url, body)
-        self.assertEqual(response.status_code, 201)
-        self.assertTrue(user_roberto.is_friend(user_juan))
-
-        body = {
-            "user": user_juan.id,
-            "is_friend_of": user_maykel.id,
-        }
-
-        http_auth = get_request_credentials(user_juan)
-        self.client.credentials(**http_auth)
-        response = self.client.post(url, body)
-        self.assertEqual(response.status_code, 201)
-        self.assertTrue(user_juan.is_friend(user_maykel))
-
-        body = {
-            "user": user_maykel.id,
-            "is_friend_of": user_leo.id,
-        }
-
-        http_auth = get_request_credentials(user_maykel)
-        self.client.credentials(**http_auth)
-        response = self.client.post(url, body)
-        self.assertEqual(response.status_code, 201)
-        self.assertTrue(user_maykel.is_friend(user_leo))
-
-        body = {
-            "user": user_ana.id,
-            "is_friend_of": user_leo.id,
-        }
-
-        http_auth = get_request_credentials(user_ana)
-        self.client.credentials(**http_auth)
-        response = self.client.post(url, body)
-        self.assertEqual(response.status_code, 201)
-        self.assertTrue(user_ana.is_friend(user_leo))
-
-    def test_user_friends_profiles_list(self):
-        """Test user friends profiles list """
-
-        # users
-        user_roberto = baker.make(User, username='Roberto646', first_name='Roberto', last_name='Doe',
-                                  email='martha@example.com', password='top_secret!', is_superuser=True,
-                                  is_staff=True, is_active=True)
-
-        user_ana = baker.make(User, username='Ana564', first_name='Ana', last_name='Sans',
-                              email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
-                              is_active=True)
-
-        user_juan = baker.make(User, username='Juan564', first_name='Juan', last_name='Sans',
-                               email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
-                               is_active=True)
-
-        user_maykel = baker.make(User, username='Maykel564', first_name='Maykel', last_name='Sans',
-                                 email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
-                                 is_active=True)
-
-        user_leo = baker.make(User, username='Leo564', first_name='Leo', last_name='Sans',
-                              email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
-                              is_active=True)
-
-        # profiles
-        baker.make(Profile, user=user_roberto, phone='(925)-967-1402', address='8655 Frances Ct', city='France',
-                   state='FR', zipcode='65487', available=True,
+        # Test profiles
+        baker.make(Profile, user=self.user_roberto, phone='(925)-967-1402', address='8655 Frances Ct',
+                   city='France', state='FR', zipcode='65487', available=True,
                    img='https://randomuser.me/api/portraits/women/65.jpg')
 
-        baker.make(Profile, user=user_ana, phone='(390)-568-1958', address='3494 Sunset St', city='Italy',
+        baker.make(Profile, user=self.user_ana, phone='(390)-568-1958', address='3494 Sunset St', city='Italy',
                    state='IT', zipcode='65487', available=True,
                    img='https://randomuser.me/api/portraits/women/65.jpg')
 
-        baker.make(Profile, user=user_juan, phone='(396)-158-3397', address='4738 Fairview St', city='Poland',
+        baker.make(Profile, user=self.user_juan, phone='(396)-158-3397', address='4738 Fairview St', city='Poland',
                    state='PL', zipcode='65487', available=True,
                    img='https://randomuser.me/api/portraits/women/65.jpg')
 
-        baker.make(Profile, user=user_maykel, phone='(438)-527-4225', address='8794 E Sandy Lake Rd', city='Belarus',
-                   state='BL', zipcode='65487', available=True,
+        baker.make(Profile, user=self.user_maykel, phone='(438)-527-4225', address='8794 E Sandy Lake Rd',
+                   city='Belarus', state='BL', zipcode='65487', available=True,
                    img='https://randomuser.me/api/portraits/women/65.jpg')
 
-        baker.make(Profile, user=user_leo, phone='(750)-453-6615', address='1138 Valley View Ln', city='Panama',
-                   state='PN', zipcode='65487', available=True,
+        baker.make(Profile, user=self.user_leo, phone='(750)-453-6615', address='1138 Valley View Ln',
+                   city='Panama', state='PN', zipcode='65487', available=True,
                    img='https://randomuser.me/api/portraits/women/65.jpg')
 
+    def friend_list_create(self):
+        """Helper method for create users relations"""
         url = reverse('friend_list_create')
 
         body = {
-            "user": user_roberto.id,
-            "is_friend_of": user_ana.id,
+            "user": self.user_roberto.id,
+            "is_friend_of": self.user_ana.id,
         }
 
-        http_auth = get_request_credentials(user_roberto)
+        http_auth = get_request_credentials(self.user_roberto)
         self.client.credentials(**http_auth)
-        self.client.post(url, body)
+        response = self.client.post(url, body)
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(self.user_roberto.is_friend(self.user_ana))
 
         body = {
-            "user": user_roberto.id,
-            "is_friend_of": user_juan.id,
+            "user": self.user_roberto.id,
+            "is_friend_of": self.user_juan.id,
         }
 
-        self.client.post(url, body)
+        response = self.client.post(url, body)
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(self.user_roberto.is_friend(self.user_juan))
 
         body = {
-            "user": user_juan.id,
-            "is_friend_of": user_maykel.id,
+            "user": self.user_juan.id,
+            "is_friend_of": self.user_maykel.id,
         }
 
-        http_auth = get_request_credentials(user_juan)
+        http_auth = get_request_credentials(self.user_juan)
         self.client.credentials(**http_auth)
-        self.client.post(url, body)
+        response = self.client.post(url, body)
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(self.user_juan.is_friend(self.user_maykel))
 
         body = {
-            "user": user_maykel.id,
-            "is_friend_of": user_leo.id,
+            "user": self.user_maykel.id,
+            "is_friend_of": self.user_leo.id,
         }
 
-        http_auth = get_request_credentials(user_maykel)
+        http_auth = get_request_credentials(self.user_maykel)
         self.client.credentials(**http_auth)
-        self.client.post(url, body)
+        response = self.client.post(url, body)
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(self.user_maykel.is_friend(self.user_leo))
 
         body = {
-            "user": user_ana.id,
-            "is_friend_of": user_leo.id,
+            "user": self.user_ana.id,
+            "is_friend_of": self.user_leo.id,
         }
 
-        http_auth = get_request_credentials(user_ana)
+        http_auth = get_request_credentials(self.user_ana)
         self.client.credentials(**http_auth)
-        self.client.post(url, body)
+        response = self.client.post(url, body)
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(self.user_ana.is_friend(self.user_leo))
 
-        # test
-        url = reverse('friends_profiles', args=[user_roberto.id])
-        http_auth = get_request_credentials(user_roberto)
+    def test_create_friends(self):
+        """Test create friends"""
+        self.friend_list_create()
+
+    def test_user_friends_profiles_list(self):
+        """Test user friends profiles list """
+        self.friend_list_create()
+
+        url = reverse('friends_profiles', args=[self.user_roberto.id])
+        http_auth = get_request_credentials(self.user_roberto)
         self.client.credentials(**http_auth)
         response = self.client.get(url)
+
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertMatchSnapshot(data)
 
     def test_shorter_connection(self):
         """Test shorter connection between two users"""
-        user_roberto = baker.make(User, username='Roberto646', first_name='Roberto', last_name='Doe',
-                                  email='martha@example.com', password='top_secret!', is_superuser=True,
-                                  is_staff=True, is_active=True)
+        self.friend_list_create()
 
-        user_ana = baker.make(User, username='Ana564', first_name='Ana', last_name='Sans',
-                              email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
-                              is_active=True)
-
-        user_juan = baker.make(User, username='Juan564', first_name='Juan', last_name='Sans',
-                               email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
-                               is_active=True)
-
-        user_maykel = baker.make(User, username='Maykel564', first_name='Maykel', last_name='Sans',
-                                 email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
-                                 is_active=True)
-
-        user_leo = baker.make(User, username='Leo564', first_name='Leo', last_name='Sans',
-                              email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
-                              is_active=True)
-
-        url = reverse('friend_list_create')
-
-        body = {
-            "user": user_roberto.id,
-            "is_friend_of": user_ana.id,
-        }
-
-        http_auth = get_request_credentials(user_roberto)
-        self.client.credentials(**http_auth)
-        self.client.post(url, body)
-
-        body = {
-            "user": user_roberto.id,
-            "is_friend_of": user_juan.id,
-        }
-
-        self.client.post(url, body)
-
-        body = {
-            "user": user_juan.id,
-            "is_friend_of": user_maykel.id,
-        }
-
-        http_auth = get_request_credentials(user_juan)
-        self.client.credentials(**http_auth)
-        self.client.post(url, body)
-
-        body = {
-            "user": user_maykel.id,
-            "is_friend_of": user_leo.id,
-        }
-
-        http_auth = get_request_credentials(user_maykel)
-        self.client.credentials(**http_auth)
-        self.client.post(url, body)
-
-        body = {
-            "user": user_ana.id,
-            "is_friend_of": user_leo.id,
-        }
-
-        http_auth = get_request_credentials(user_ana)
-        self.client.credentials(**http_auth)
-        self.client.post(url, body)
-
-        url = reverse('shorter_connection_friends', args=[user_roberto.id, user_leo.id])
-        http_auth = get_request_credentials(user_roberto)
+        url = reverse('shorter_connection_friends', args=[self.user_roberto.id, self.user_leo.id])
+        http_auth = get_request_credentials(self.user_roberto)
         self.client.credentials(**http_auth)
         response = self.client.get(url)
+
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertEqual(len(data), 1)
-        self.assertEqual(data[0], user_ana.id)
+        self.assertEqual(data[0], self.user_ana.id)
+
+    def test_delete_friendship(self):
+        """Test delete friendship"""
+        self.friend_list_create()
+
+        url = reverse('friendship_delete', args=[self.user_roberto.id, self.user_juan.id])
+        http_auth = get_request_credentials(self.user_roberto)
+        self.client.credentials(**http_auth)
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(self.user_roberto.is_friend(self.user_juan.id))

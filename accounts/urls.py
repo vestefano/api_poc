@@ -23,6 +23,8 @@ urlpatterns = [
 
     path('friends/', views.ListCreateFriendApiView.as_view(), name='friend_list_create'),
     path('friends/<int:user_id>/', views.RetrieveFriendsApiView.as_view(), name='friends_profiles'),
+    path('friends/delete/<int:user_id>/<int:friend_id>/', views.DeleteFriendshipAPIView.as_view(),
+         name='friendship_delete'),
     path('shorter_connection/<int:uid>/<int:ouid>/', views.ShorterConnectionFriends.as_view(),
          name='shorter_connection_friends'),
 ]

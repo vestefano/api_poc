@@ -2,7 +2,7 @@ from django.http import Http404
 from django.test import TestCase
 import mock
 
-from accounts.views import ShorterConnectionFriends
+from accounts.views import ShorterConnectionFriends, DeleteFriendshipAPIView
 
 
 class ShorterConnectionFriendsTest(TestCase):
@@ -36,3 +36,21 @@ class ShorterConnectionFriendsTest(TestCase):
             shorter_connection = ShorterConnectionFriends.get(mock.Mock(), 1, 1)
 
         self.assertEqual(shorter_connection, response)
+
+
+class DeleteFriendshipAPIViewTest(TestCase):
+    """Test DeleteFriendshipAPIView"""
+
+    def test_get_object(self):
+        """Test get_object"""
+        kwargs = {
+            'user_id': 1,
+            'friend_id': 2
+        }
+        delete_view = mock.Mock(kwargs=kwargs, get_queryset=mock.Mock(), check_object_permissions=mock.Mock())
+        obj = mock.Mock()
+
+        with mock.patch('accounts.views.get_object_or_404', return_value=obj):
+            result = DeleteFriendshipAPIView.get_object(delete_view)
+
+        self.assertEqual(result, obj)

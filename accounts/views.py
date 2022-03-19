@@ -1,7 +1,8 @@
 """Accounts views"""
 from django.http import Http404
 from rest_framework import permissions
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, get_object_or_404
+from rest_framework.generics import DestroyAPIView
 from rest_framework.generics import ListAPIView
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.generics import RetrieveAPIView
@@ -14,11 +15,10 @@ from accounts.models import Profile, User, Friend
 from accounts.permissions import IsOwnerOrAdmin
 from accounts.serializers import ProfileSerializer, UserSerializer, FriendsSerializer, AdminUserSerializer, \
     FriendsProfileSerializer
-
-# Users views
 from accounts.utils import FriendsConnections
 
 
+# Users views
 class RetrieveUserApiView(RetrieveAPIView):
     """User list api view"""
     permission_classes = [
@@ -175,13 +175,34 @@ class ListCreateFriendApiView(ListCreateAPIView):
 
 class RetrieveFriendsApiView(RetrieveAPIView):
     """Retrieve user friends profiles"""
-    # permission_classes = [
-    #     permissions.IsAuthenticated,
-    # ]
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
     lookup_field = 'user_id'
     action = "retrieve"
     queryset = Profile.objects.all()
     serializer_class = FriendsProfileSerializer
+
+
+class DeleteFriendshipAPIView(DestroyAPIView):
+    """Delete friendship api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsOwnerOrAdmin,
+    ]
+    queryset = Friend.objects.all()
+    serializer_class = FriendsSerializer
+
+    def get_object(self):
+        """Get object"""
+        queryset = self.get_queryset()
+        filters = {
+            'user_id': self.kwargs['user_id'],
+            'is_friend_of': self.kwargs['friend_id'],
+        }
+        obj = get_object_or_404(queryset, **filters)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
 
 class ShorterConnectionFriends(APIView):

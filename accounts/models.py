@@ -29,7 +29,7 @@ class Profile(models.Model):
     img = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):  # pragma: no cover
-        return self.username
+        return self.user.username
 
     def get_user_friends_id(self):
         """Get user friends"""
