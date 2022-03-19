@@ -124,7 +124,6 @@ class RetrieveProfileApiView(RetrieveAPIView):
     """Profile list api view"""
     permission_classes = [
         permissions.IsAuthenticated,
-        IsOwnerOrAdmin,
     ]
     lookup_field = 'user_id'
     action = "retrieve"
