@@ -12,8 +12,8 @@ from rest_framework.views import APIView
 
 from accounts.models import Profile, User, Friend
 from accounts.permissions import IsOwnerOrAdmin
-from accounts.serializers import ProfileSerializer, UserSerializer, FriendsSerializer, AdminUserSerializer
-
+from accounts.serializers import ProfileSerializer, UserSerializer, FriendsSerializer, AdminUserSerializer, \
+    FriendsProfileSerializer
 
 # Users views
 from accounts.utils import FriendsConnections
@@ -85,7 +85,6 @@ class AdminCreateUserApiView(CreateAPIView):
         permissions.IsAuthenticated,
         permissions.IsAdminUser,
     ]
-    permission_classes = [permissions.AllowAny, ]
     queryset = User.objects.all()
     serializer_class = AdminUserSerializer
 
@@ -172,6 +171,17 @@ class ListCreateFriendApiView(ListCreateAPIView):
     ]
     queryset = Friend.objects.all()
     serializer_class = FriendsSerializer
+
+
+class RetrieveFriendsApiView(RetrieveAPIView):
+    """Retrieve user friends profiles"""
+    # permission_classes = [
+    #     permissions.IsAuthenticated,
+    # ]
+    lookup_field = 'user_id'
+    action = "retrieve"
+    queryset = Profile.objects.all()
+    serializer_class = FriendsProfileSerializer
 
 
 class ShorterConnectionFriends(APIView):

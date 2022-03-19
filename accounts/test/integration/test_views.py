@@ -515,8 +515,8 @@ class FriendsApiViewsTest(TestCase):
         super(FriendsApiViewsTest, self).setUp()
         self.client = APIClient()
 
-    def test_list_profile(self):
-        """Test list profiles"""
+    def test_create_friends(self):
+        """Test create friends"""
 
         user_roberto = baker.make(User, username='Roberto646', first_name='Roberto', last_name='Doe',
                                   email='martha@example.com', password='top_secret!', is_superuser=True,
@@ -592,6 +592,105 @@ class FriendsApiViewsTest(TestCase):
         response = self.client.post(url, body)
         self.assertEqual(response.status_code, 201)
         self.assertTrue(user_ana.is_friend(user_leo))
+
+    def test_user_friends_profiles_list(self):
+        """Test user friends profiles list """
+
+        # users
+        user_roberto = baker.make(User, username='Roberto646', first_name='Roberto', last_name='Doe',
+                                  email='martha@example.com', password='top_secret!', is_superuser=True,
+                                  is_staff=True, is_active=True)
+
+        user_ana = baker.make(User, username='Ana564', first_name='Ana', last_name='Sans',
+                              email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
+                              is_active=True)
+
+        user_juan = baker.make(User, username='Juan564', first_name='Juan', last_name='Sans',
+                               email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
+                               is_active=True)
+
+        user_maykel = baker.make(User, username='Maykel564', first_name='Maykel', last_name='Sans',
+                                 email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
+                                 is_active=True)
+
+        user_leo = baker.make(User, username='Leo564', first_name='Leo', last_name='Sans',
+                              email='mikael@example.com', password='top_secret!', is_superuser=False, is_staff=False,
+                              is_active=True)
+
+        # profiles
+        baker.make(Profile, user=user_roberto, phone='(925)-967-1402', address='8655 Frances Ct', city='France',
+                   state='FR', zipcode='65487', available=True,
+                   img='https://randomuser.me/api/portraits/women/65.jpg')
+
+        baker.make(Profile, user=user_ana, phone='(390)-568-1958', address='3494 Sunset St', city='Italy',
+                   state='IT', zipcode='65487', available=True,
+                   img='https://randomuser.me/api/portraits/women/65.jpg')
+
+        baker.make(Profile, user=user_juan, phone='(396)-158-3397', address='4738 Fairview St', city='Poland',
+                   state='PL', zipcode='65487', available=True,
+                   img='https://randomuser.me/api/portraits/women/65.jpg')
+
+        baker.make(Profile, user=user_maykel, phone='(438)-527-4225', address='8794 E Sandy Lake Rd', city='Belarus',
+                   state='BL', zipcode='65487', available=True,
+                   img='https://randomuser.me/api/portraits/women/65.jpg')
+
+        baker.make(Profile, user=user_leo, phone='(750)-453-6615', address='1138 Valley View Ln', city='Panama',
+                   state='PN', zipcode='65487', available=True,
+                   img='https://randomuser.me/api/portraits/women/65.jpg')
+
+        url = reverse('friend_list_create')
+
+        body = {
+            "user": user_roberto.id,
+            "is_friend_of": user_ana.id,
+        }
+
+        http_auth = get_request_credentials(user_roberto)
+        self.client.credentials(**http_auth)
+        self.client.post(url, body)
+
+        body = {
+            "user": user_roberto.id,
+            "is_friend_of": user_juan.id,
+        }
+
+        self.client.post(url, body)
+
+        body = {
+            "user": user_juan.id,
+            "is_friend_of": user_maykel.id,
+        }
+
+        http_auth = get_request_credentials(user_juan)
+        self.client.credentials(**http_auth)
+        self.client.post(url, body)
+
+        body = {
+            "user": user_maykel.id,
+            "is_friend_of": user_leo.id,
+        }
+
+        http_auth = get_request_credentials(user_maykel)
+        self.client.credentials(**http_auth)
+        self.client.post(url, body)
+
+        body = {
+            "user": user_ana.id,
+            "is_friend_of": user_leo.id,
+        }
+
+        http_auth = get_request_credentials(user_ana)
+        self.client.credentials(**http_auth)
+        self.client.post(url, body)
+
+        # test
+        url = reverse('friends_profiles', args=[user_roberto.id])
+        http_auth = get_request_credentials(user_roberto)
+        self.client.credentials(**http_auth)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertMatchSnapshot(data)
 
     def test_shorter_connection(self):
         """Test shorter connection between two users"""

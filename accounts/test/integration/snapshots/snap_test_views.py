@@ -37,6 +37,41 @@ snapshots['AdminUserApiViewsTest::test_list_users 1'] = [
     }
 ]
 
+snapshots['FriendsApiViewsTest::test_user_friends_profiles_list 1'] = {
+    'friends': [
+        {
+            'address': '3494 Sunset St',
+            'available': True,
+            'city': 'Italy',
+            'first_name': 'Ana',
+            'friends': [
+                5
+            ],
+            'img': 'https://randomuser.me/api/portraits/women/65.jpg',
+            'last_name': 'Sans',
+            'phone': '(390)-568-1958',
+            'state': 'IT',
+            'user_id': 2,
+            'zipcode': '65487'
+        },
+        {
+            'address': '4738 Fairview St',
+            'available': True,
+            'city': 'Poland',
+            'first_name': 'Juan',
+            'friends': [
+                4
+            ],
+            'img': 'https://randomuser.me/api/portraits/women/65.jpg',
+            'last_name': 'Sans',
+            'phone': '(396)-158-3397',
+            'state': 'PL',
+            'user_id': 3,
+            'zipcode': '65487'
+        }
+    ]
+}
+
 snapshots['ProfilesApiViewsTest::test_list_profile 1'] = [
     {
         'address': '8655 Frances Ct',

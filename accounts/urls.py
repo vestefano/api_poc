@@ -22,6 +22,7 @@ urlpatterns = [
     path('profile/delete/<int:user_id>/', views.DestroyProfileApiView.as_view(), name='profile_delete'),
 
     path('friends/', views.ListCreateFriendApiView.as_view(), name='friend_list_create'),
+    path('friends/<int:user_id>/', views.RetrieveFriendsApiView.as_view(), name='friends_profiles'),
     path('shorter_connection/<int:uid>/<int:ouid>/', views.ShorterConnectionFriends.as_view(),
          name='shorter_connection_friends'),
 ]

@@ -37,9 +37,20 @@ class ProfileModelTest(TestCase):
         user_friends = mock.Mock()
         profile = mock.Mock(user=mock.Mock(friends_id_list=user_friends))
 
-        result = Profile.get_user_friends(profile)
+        result = Profile.get_user_friends_id(profile)
 
         self.assertEqual(user_friends, result)
+
+    def test_get_friends_profiles(self):
+        """Test for get_friends_profiles"""
+        profile = mock.Mock(user=mock.Mock(friends_id_list=mock.Mock()))
+        friends_profiles = mock.Mock()
+
+        with mock.patch('accounts.models.Profile.objects.filter', return_value=friends_profiles):
+            result = Profile.get_friends_profiles(profile)
+
+        self.assertEqual(friends_profiles, result)
+
 
 
 class FriendModelTest(TestCase):

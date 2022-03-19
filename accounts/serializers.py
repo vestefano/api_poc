@@ -98,18 +98,9 @@ class AdminUserSerializer(serializers.ModelSerializer):
         return instance
 
 
-class FriendsSerializer(serializers.ModelSerializer):
-    """Friends serializer class"""
-
-    class Meta:
-        """Meta class"""
-        model = Friend
-        fields = ['user', 'is_friend_of']
-
-
 class ProfileSerializer(serializers.ModelSerializer):
     """Profile serializer class"""
-    friends = serializers.ListField(read_only=True, source='get_user_friends')
+    friends = serializers.ListField(read_only=True, source='get_user_friends_id')
     first_name = serializers.CharField(read_only=True, source='user.first_name')
     last_name = serializers.CharField(read_only=True, source='user.last_name')
     available = serializers.BooleanField(read_only=True, initial=True)
@@ -131,3 +122,22 @@ class ProfileSerializer(serializers.ModelSerializer):
         profile = Profile(user_id=request.user.id, **validated_data)
         profile.save()
         return profile
+
+
+class FriendsSerializer(serializers.ModelSerializer):
+    """Friends serializer class"""
+
+    class Meta:
+        """Meta class"""
+        model = Friend
+        fields = ['user', 'is_friend_of']
+
+
+class FriendsProfileSerializer(serializers.ModelSerializer):
+    """Friends profile serializer class"""
+    friends = ProfileSerializer(many=True, read_only=True, source='get_friends_profiles')
+
+    class Meta:
+        """Meta class"""
+        model = Profile
+        fields = ['friends']

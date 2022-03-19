@@ -31,9 +31,13 @@ class Profile(models.Model):
     def __str__(self):  # pragma: no cover
         return self.username
 
-    def get_user_friends(self):
+    def get_user_friends_id(self):
         """Get user friends"""
         return self.user.friends_id_list
+
+    def get_friends_profiles(self):
+        """Get user friends"""
+        return Profile.objects.filter(user_id__in=self.user.friends_id_list)
 
 
 class Friend(models.Model):
