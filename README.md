@@ -12,6 +12,8 @@ This project is the django api rest for a simple social network. Its was made wi
 
 **Virtual Environment**: Virtualenv 
 
+**Deploy of api_poc**: [Heroku](https://app-poc-dspot.herokuapp.com/api/jwt/token/) -> [Documentation](https://app-poc-dspot.herokuapp.com/docs/)  
+
 ## Download & Run on local
 
 ### Clone the repository, install packages and run the api
