@@ -177,9 +177,9 @@ class ListCreateFriendApiView(ListCreateAPIView):
 
 class ShorterConnectionFriends(APIView):
     """Short connection friends view"""
-    # permission_classes = [
-    #     permissions.IsAuthenticated,
-    # ]
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
 
     @staticmethod
     def get(request, uid, ouid):
