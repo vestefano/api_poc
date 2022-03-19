@@ -25,14 +25,14 @@ class FriendsConnections:
             user = User.objects.get(pk=visiting_user_id)
             if user.is_friend(other_user_id):
                 return users_visited
-            else:
-                # If the user is not a direct friend of the final destination user, all his friends who are not in
-                # the list of visited users or connections to visit are searched for, if he has friends that meet these
-                # conditions they are added to the end of the list of connections to explore.
-                friends = Friend.objects.filter(user_id=visiting_user_id).exclude(is_friend_of__in=users_visited). \
-                    exclude(is_friend_of__in=connections_to_explore).values_list('is_friend_of', flat=True)
-                if friends.count() > 0:
-                    connections_to_explore.extend(friends)
+
+            # If the user is not a direct friend of the final destination user, all his friends who are not in
+            # the list of visited users or connections to visit are searched for, if he has friends that meet these
+            # conditions they are added to the end of the list of connections to explore.
+            friends = Friend.objects.filter(user_id=visiting_user_id).exclude(is_friend_of__in=users_visited). \
+                exclude(is_friend_of__in=connections_to_explore).values_list('is_friend_of', flat=True)
+            if friends.count() > 0:
+                connections_to_explore.extend(friends)
 
     @classmethod
     def shorter_connection(cls, user_id, other_user_id):
