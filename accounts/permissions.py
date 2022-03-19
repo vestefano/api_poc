@@ -16,12 +16,14 @@ class IsOwnerOrAdmin(permissions.BasePermission):
 
         if user_request.is_superuser:
             return True
-        elif isinstance(obj, User):
+
+        if isinstance(obj, User):
             return obj == user_request
-        elif hasattr(obj, 'user'):
+
+        if hasattr(obj, 'user'):
             return obj.user == user_request
-        else:
-            return False
+
+        return False
 
 
 class IsOwnerOrFriendOrAdmin(permissions.BasePermission):
@@ -35,9 +37,11 @@ class IsOwnerOrFriendOrAdmin(permissions.BasePermission):
 
         if user_request.is_superuser:
             return True
-        elif isinstance(obj, User):
+
+        if isinstance(obj, User):
             return obj == user_request or user_request.is_friend(obj.id)
-        elif hasattr(obj, 'user'):
+
+        if hasattr(obj, 'user'):
             return obj.user == user_request or user_request.is_friend(obj.user.id)
-        else:
-            return False
+
+        return False
