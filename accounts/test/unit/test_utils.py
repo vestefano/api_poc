@@ -75,8 +75,8 @@ class FriendsConnectionsTest(TestCase):
 
         self.assertEqual(result, [])
 
-    def test_shorter_connection_when_user_is_friend(self):
-        """Test shorter_connection when user is friend of the target user"""
+    def test_shorter_connection_when_not_connections(self):
+        """Test shorter_connection when user don't have connection with the target user"""
 
         with mock.patch('accounts.utils.FriendsConnections._find_connections', return_value=None):
             result = FriendsConnections.shorter_connection(1, 2)

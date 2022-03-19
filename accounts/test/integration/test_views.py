@@ -22,7 +22,7 @@ class UserApiViewsTest(TestCase):
     """Test for UserApiViews"""
 
     def setUp(self):
-        super(UserApiViewsTest, self).setUp()
+        super().setUp()
         self.client = APIClient()
         self.user = User.objects.create_user(
             username='JD2022',
@@ -199,7 +199,7 @@ class AdminUserApiViewsTest(TestCase):
     """Test for AdminUserApiViews"""
 
     def setUp(self):
-        super(AdminUserApiViewsTest, self).setUp()
+        super().setUp()
         self.client = APIClient()
         self.user = User.objects.create_user(
             username='JD2022',
@@ -301,7 +301,7 @@ class ProfilesApiViewsTest(TestCase):
     """Test for ProfilesApiViews"""
 
     def setUp(self):
-        super(ProfilesApiViewsTest, self).setUp()
+        super().setUp()
         self.client = APIClient()
         self.user = User.objects.create_user(
             username='JD2022',
@@ -512,7 +512,7 @@ class FriendsApiViewsTest(TestCase):
     """Test for Friends views"""
 
     def setUp(self):
-        super(FriendsApiViewsTest, self).setUp()
+        super().setUp()
         self.client = APIClient()
 
         # Test users
