@@ -44,7 +44,9 @@ def assign_friendship(api_url, friends_number, user_list):
         friends = user_list.copy()
         friends.remove(user)
 
-        for i in range(0, friends_number):
+        i = 0
+        while i < friends_number:
+            i += 1
             friend = random.choice(friends)
 
             data = {
@@ -113,16 +115,18 @@ def create_users(api_url, profiles_amount, friends_number):
         print(user)
 
 
-print('Api url like # http://localhost:8000')
-api_url = input()
+if __name__ == '__main__':
 
-print('Profile amount')
-profile_amount = input()
+    print('Api url like # http://localhost:8000')
+    api_host = input()
 
-print('Friends amount')
-friends_number = input()
+    print('Profile amount')
+    profile_amount = input()
 
-if not api_url:
-    api_url = 'http://localhost:8000'
+    print('Friends amount')
+    friendships = input()
 
-create_users(api_url, int(profile_amount), int(friends_number))
+    if not api_host:
+        api_host = 'http://localhost:8000'
+
+    create_users(api_host, int(profile_amount), int(friendships))
