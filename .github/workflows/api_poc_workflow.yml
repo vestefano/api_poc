@@ -43,6 +43,6 @@ jobs:
       - name: Run Migrations # run migrations to create table in side car db container
         run: python manage.py migrate
       - name: Run Unit Test # running tests
-        run: python manage.py test --settings=api_poc.settings_mocked_dev
+        run: python manage.py test --keepdb --settings=api_poc.settings_mocked_dev
       - name: Run Integration Test # running tests
-        run: python manage.py test
+        run: python manage.py test --keepdb
