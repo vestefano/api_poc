@@ -75,3 +75,8 @@ The seeder is passed the following parameters:
 - The url of the api, in case nothing is passed to it, it is assumed to be ```http://localhost:8000```
 - The number of profiles you want
 - The number of friends each profile should have
+
+>Note: The project has pylint-django for code quality. To run it use this command
+```bash
+pylint --load-plugins pylint_django --django-settings-module=api_poc.settings accounts api_poc seeder_script.py
+```
