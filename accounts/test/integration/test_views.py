@@ -1,6 +1,7 @@
 """Integration test for views"""
 import json
 
+from django.test import TransactionTestCase
 from django.test import skipIfDBFeature
 from django.urls import reverse
 from model_bakery import baker
@@ -18,8 +19,9 @@ def get_request_credentials(user):
 
 
 @skipIfDBFeature('is_mocked')
-class UserApiViewsTest(TestCase):
+class UserApiViewsTest(TestCase, TransactionTestCase):
     """Test for UserApiViews"""
+    reset_sequence = True  # reset auto-increment fields for each test
 
     def setUp(self):
         super().setUp()
@@ -195,8 +197,9 @@ class UserApiViewsTest(TestCase):
 
 
 @skipIfDBFeature('is_mocked')
-class AdminUserApiViewsTest(TestCase):
+class AdminUserApiViewsTest(TestCase, TransactionTestCase):
     """Test for AdminUserApiViews"""
+    reset_sequence = True  # reset auto-increment fields for each test
 
     def setUp(self):
         super().setUp()
@@ -297,8 +300,9 @@ class AdminUserApiViewsTest(TestCase):
 
 
 @skipIfDBFeature('is_mocked')
-class ProfilesApiViewsTest(TestCase):
+class ProfilesApiViewsTest(TestCase, TransactionTestCase):
     """Test for ProfilesApiViews"""
+    reset_sequence = True  # reset auto-increment fields for each test
 
     def setUp(self):
         super().setUp()
@@ -508,8 +512,9 @@ class ProfilesApiViewsTest(TestCase):
 
 
 @skipIfDBFeature('is_mocked')
-class FriendsApiViewsTest(TestCase):
+class FriendsApiViewsTest(TestCase, TransactionTestCase):
     """Test for Friends views"""
+    reset_sequence = True  # reset auto-increment fields for each test
 
     def setUp(self):
         super().setUp()
