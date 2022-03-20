@@ -79,9 +79,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'api_poc.wsgi.application'
 
+GITHUB_WORKFLOW = os.getenv('GITHUB_WORKFLOW')
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-if os.getenv('GITHUB_WORKFLOW'):
+if GITHUB_WORKFLOW:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
