@@ -32,6 +32,9 @@ python manage.py runserver
 >Note: By default the api starts running on port 8000. The api documentation can be found at 
 http://localhost:8000/docs/
 
+## Continuous integration (CI)
+[Pipeline](https://github.com/vestefano/api_poc/actions)
+
 ## Run test
 ```bash
 python manage.py test
