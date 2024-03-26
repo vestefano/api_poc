@@ -10,7 +10,7 @@ urlpatterns = [
     path('user/delete/<int:pk>/', views.DestroyUserApiView.as_view(), name='account_delete'),
 
     path('manager/', views.AdminListUserApiView.as_view(), name='account_manager_list'),
-    path('manager/create/', views.AdminCreateUserApiView.as_view(), name='account_manager_create'),
+    path('manager/', views.AdminCreateUserApiView.as_view(), name='account_manager_create'),
     path('manager/<int:pk>/', views.AdminRetrieveUserApiView.as_view(), name='account_manager_details'),
     path('manager/update/<int:pk>/', views.AdminUpdateUserApiView.as_view(), name='account_manager_update'),
     path('manager/delete/<int:pk>/', views.AdminDestroyUserApiView.as_view(), name='account_manager_delete'),
