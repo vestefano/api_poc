@@ -41,7 +41,7 @@ class UserApiViewsTest(TestCase):
     def test_owner_retrieve_account(self):
         """Test user retrieve her details"""
         user = self.user
-        url = reverse('account_details', args=[user.id])
+        url = reverse('account_retrieve_update_delete', args=[user.id])
 
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
@@ -58,7 +58,7 @@ class UserApiViewsTest(TestCase):
                                 email='martha@example.com', password='top_secret!', is_superuser=False, is_staff=False,
                                 is_active=True)
 
-        url = reverse('account_details', args=[other_user.id])
+        url = reverse('account_retrieve_update_delete', args=[other_user.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.get(url)
@@ -83,7 +83,7 @@ class UserApiViewsTest(TestCase):
     def test_update_user(self):
         """Test user update her own account"""
         user = self.user
-        url = reverse('account_update', args=[user.id])
+        url = reverse('account_retrieve_update_delete', args=[user.id])
 
         body = {
             "username": "Mathias2021",
@@ -119,7 +119,7 @@ class UserApiViewsTest(TestCase):
             "email": "martha@email.com",
         }
 
-        url = reverse('account_update', args=[other_user.id])
+        url = reverse('account_retrieve_update_delete', args=[other_user.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.put(url, body)
@@ -143,7 +143,7 @@ class UserApiViewsTest(TestCase):
             "email": "martha@email.com",
         }
 
-        url = reverse('account_update', args=[other_user.id])
+        url = reverse('account_retrieve_update_delete', args=[other_user.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.put(url, body)
@@ -155,7 +155,7 @@ class UserApiViewsTest(TestCase):
         user = self.user
         username = user.username
 
-        url = reverse('account_delete', args=[user.id])
+        url = reverse('account_retrieve_update_delete', args=[user.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.delete(url)
@@ -173,7 +173,7 @@ class UserApiViewsTest(TestCase):
                                 is_active=True)
         username = other_user.username
 
-        url = reverse('account_delete', args=[other_user.id])
+        url = reverse('account_retrieve_update_delete', args=[other_user.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.delete(url)
@@ -189,7 +189,7 @@ class UserApiViewsTest(TestCase):
                                 is_active=True)
         username = other_user.username
 
-        url = reverse('account_delete', args=[other_user.id])
+        url = reverse('account_retrieve_update_delete', args=[other_user.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.delete(url)

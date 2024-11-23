@@ -5,9 +5,7 @@ from accounts import views
 
 urlpatterns = [
     path('user/create/', views.CreateUserApiView.as_view(), name='account_create'),
-    path('user/<int:pk>/', views.RetrieveUserApiView.as_view(), name='account_details'),
-    path('user/update/<int:pk>/', views.UpdateUserApiView.as_view(), name='account_update'),
-    path('user/delete/<int:pk>/', views.DestroyUserApiView.as_view(), name='account_delete'),
+    path('user/<int:pk>/', views.RetrieveUpdateDeleteUserApiView.as_view(), name='account_retrieve_update_delete'),
 
     path('manager/', views.AdminListUserApiView.as_view(), name='account_manager_list'),
     path('manager/', views.AdminCreateUserApiView.as_view(), name='account_manager_create'),
