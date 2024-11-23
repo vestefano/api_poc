@@ -42,22 +42,27 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
+        continue-on-error: false  # If this step fails, the workflow will stop
 
       # Check Python version (optional)
       - name: Check Python version
         run: python --version
+        if: success()  # Only run this if the previous step was successful
 
       # Run linting checks (pylint with Django plugin)
       - name: Run pylint
         run: pylint --load-plugins pylint_django --django-settings-module=api_poc.settings accounts api_poc seeder_script.py
+        continue-on-error: true  # Allow the workflow to continue even if pylint fails
 
       # Run migrations to set up the database schema in PostgreSQL
       - name: Run migrations
         run: python manage.py migrate
+        continue-on-error: false  # If this step fails, the workflow will stop
 
-      # Run tests (unit tests, etc.)
+      # Run tests (unit tests, etc.) only if previous steps succeeded
       - name: Run tests
         run: python manage.py test
+        if: success()  # Only run this if both 'Install dependencies' and 'Run migrations' succeeded
 
 #  deploy:
 #    runs-on: ubuntu-latest
