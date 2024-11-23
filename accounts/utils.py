@@ -34,6 +34,8 @@ class FriendsConnections:
             if friends.count() > 0:
                 connections_to_explore.extend(friends)
 
+        return None
+
     @classmethod
     def shorter_connection(cls, user_id, other_user_id):
         """Function for find the shorter connection between user and other_user"""
