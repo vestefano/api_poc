@@ -5,6 +5,7 @@ import random
 import requests
 from randomuser import RandomUser
 
+TIMEOUT = 30
 
 def get_request_credentials(api_url, username, password):
     """Add the JWT to header for request"""
@@ -15,7 +16,7 @@ def get_request_credentials(api_url, username, password):
         "password": password,
     }
 
-    response = requests.post(api_jwt_token, data)
+    response = requests.post(api_jwt_token, data, timeout=TIMEOUT)
     response_content = json.loads(response.content)
     token = response_content['access']
 
@@ -54,7 +55,7 @@ def assign_friendship(api_url, friends_number, user_list):
                 "is_friend_of": str(friend['id']),
             }
 
-            requests.post(api_url_friendship, data, headers=http_auth)
+            requests.post(api_url_friendship, data, headers=http_auth, timeout=TIMEOUT)
 
             friends.remove(friend)
 
@@ -83,7 +84,7 @@ def create_users(api_url, profiles_amount, friends_number):
             "password": profile.get_password(),
         }
 
-        response = requests.post(api_user_create_url, user_data)
+        response = requests.post(api_user_create_url, user_data, timeout=TIMEOUT)
 
         user = json.loads(response.content)
 
@@ -107,7 +108,7 @@ def create_users(api_url, profiles_amount, friends_number):
             "available": 'true',
         }
 
-        requests.post(api_profile_create_url, profile_data, headers=http_auth)
+        requests.post(api_profile_create_url, profile_data, headers=http_auth, timeout=TIMEOUT)
 
     assign_friendship(api_url, friends_number, user_list)
 

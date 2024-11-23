@@ -6,7 +6,7 @@ msg-template={path}:{line}: [{msg_id}({symbol}), {obj}] {msg} http://pylint-mess
 
 max-line-length=120
 
-disable= W0613, E1101, W0232, W0235, R0801, R0902, E1136, R0914, W0511, C0103, W0212
+disable= W0613, E1101, W0235, R0801, R0902, E1136, R0914, W0511, C0103, W0212
 
 ignore-patterns=__init__,=*snap_test*,.*_dev.*
 

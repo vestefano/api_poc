@@ -1,7 +1,7 @@
 """Accounts views"""
 from django.http import Http404
 from rest_framework import permissions
-from rest_framework.generics import CreateAPIView, get_object_or_404
+from rest_framework.generics import CreateAPIView, get_object_or_404, RetrieveUpdateDestroyAPIView
 from rest_framework.generics import DestroyAPIView
 from rest_framework.generics import ListAPIView
 from rest_framework.generics import ListCreateAPIView
@@ -19,16 +19,6 @@ from accounts.utils import FriendsConnections
 
 
 # Users views
-class RetrieveUserApiView(RetrieveAPIView):
-    """User list api view"""
-    permission_classes = [
-        permissions.IsAuthenticated,
-        IsOwnerOrAdmin,
-    ]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
 class CreateUserApiView(CreateAPIView):
     """User create api view"""
     permission_classes = [
@@ -38,18 +28,8 @@ class CreateUserApiView(CreateAPIView):
     serializer_class = UserSerializer
 
 
-class UpdateUserApiView(RetrieveUpdateAPIView):
-    """User update api view"""
-    permission_classes = [
-        permissions.IsAuthenticated,
-        IsOwnerOrAdmin,
-    ]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class DestroyUserApiView(RetrieveDestroyAPIView):
-    """User destroy api view"""
+class RetrieveUpdateDeleteUserApiView(RetrieveUpdateDestroyAPIView):
+    """User retrieve, update and delete api view"""
     permission_classes = [
         permissions.IsAuthenticated,
         IsOwnerOrAdmin,
