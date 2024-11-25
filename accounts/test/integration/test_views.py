@@ -226,7 +226,7 @@ class AdminUserApiViewsTest(TestCase):
         baker.make(User, username='Mikael564', first_name='Mikael', last_name='Sans', email='mikael@example.com',
                    password='top_secret!', is_superuser=True, is_staff=True, is_active=True)
 
-        url = reverse('account_manager_list')
+        url = reverse('account_manager_list_create')
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.get(url)
@@ -272,7 +272,7 @@ class AdminUserApiViewsTest(TestCase):
             "is_superuser": True,
         }
 
-        url = reverse('account_manager_update', args=[other_user.id])
+        url = reverse('account_manager_retrieve_update_delete', args=[other_user.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.put(url, body)
@@ -292,7 +292,7 @@ class AdminUserApiViewsTest(TestCase):
                                 is_active=True)
         username = other_user.username
 
-        url = reverse('account_manager_delete', args=[other_user.id])
+        url = reverse('account_manager_retrieve_update_delete', args=[other_user.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.delete(url)
