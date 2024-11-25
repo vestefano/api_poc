@@ -39,7 +39,7 @@ class RetrieveUpdateDeleteUserApiView(RetrieveUpdateDestroyAPIView):
 
 
 # Admin user views
-class AdminListUserApiView(ListAPIView):
+class AdminListCreateUserApiView(ListCreateAPIView):
     """Admin user list api view"""
     permission_classes = [
         permissions.IsAuthenticated,
@@ -59,28 +59,8 @@ class AdminRetrieveUserApiView(RetrieveAPIView):
     serializer_class = AdminUserSerializer
 
 
-class AdminCreateUserApiView(CreateAPIView):
-    """User create api view"""
-    permission_classes = [
-        permissions.IsAuthenticated,
-        permissions.IsAdminUser,
-    ]
-    queryset = User.objects.all()
-    serializer_class = AdminUserSerializer
-
-
-class AdminUpdateUserApiView(RetrieveUpdateAPIView):
+class AdminRetrieveUpdateDeleteUserApiView(RetrieveUpdateDestroyAPIView):
     """Admin user update api view"""
-    permission_classes = [
-        permissions.IsAuthenticated,
-        permissions.IsAdminUser,
-    ]
-    queryset = User.objects.all()
-    serializer_class = AdminUserSerializer
-
-
-class AdminDestroyUserApiView(RetrieveDestroyAPIView):
-    """User destroy api view"""
     permission_classes = [
         permissions.IsAuthenticated,
         permissions.IsAdminUser,
