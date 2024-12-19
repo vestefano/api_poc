@@ -49,16 +49,6 @@ class AdminListCreateUserApiView(ListCreateAPIView):
     serializer_class = AdminUserSerializer
 
 
-class AdminRetrieveUserApiView(RetrieveAPIView):
-    """Admin user list api view"""
-    permission_classes = [
-        permissions.IsAuthenticated,
-        permissions.IsAdminUser,
-    ]
-    queryset = User.objects.all()
-    serializer_class = AdminUserSerializer
-
-
 class AdminRetrieveUpdateDeleteUserApiView(RetrieveUpdateDestroyAPIView):
     """Admin user update api view"""
     permission_classes = [
@@ -79,6 +69,15 @@ class ListProfileApiView(ListAPIView):
     serializer_class = ProfileSerializer
 
 
+class CreateProfileApiView(CreateAPIView):
+    """Profile create api view"""
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+
 class RetrieveProfileApiView(RetrieveAPIView):
     """Profile list api view"""
     permission_classes = [
@@ -86,15 +85,6 @@ class RetrieveProfileApiView(RetrieveAPIView):
     ]
     lookup_field = 'user_id'
     action = "retrieve"
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
-
-
-class CreateProfileApiView(CreateAPIView):
-    """Profile create api view"""
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
