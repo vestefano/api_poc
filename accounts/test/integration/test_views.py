@@ -350,7 +350,7 @@ class ProfilesApiViewsTest(TestCase):
 
         baker.make(Friend, user=user_2, is_friend_of=user)
 
-        url = reverse('profile_list')
+        url = reverse('profile_list_create')
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.get(url)
@@ -371,7 +371,7 @@ class ProfilesApiViewsTest(TestCase):
             "img": "https://randomuser.me/api/portraits/women/56.jpg"
         }
 
-        url = reverse('profile_create')
+        url = reverse('profile_list_create')
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.post(url, body)
@@ -391,7 +391,7 @@ class ProfilesApiViewsTest(TestCase):
             "state": 'OL'
         }
 
-        url = reverse('profile_update', args=[user.id])
+        url = reverse('profile_retrieve_update_delete', args=[user.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.put(url, body)
@@ -420,7 +420,7 @@ class ProfilesApiViewsTest(TestCase):
             "state": 'OL'
         }
 
-        url = reverse('profile_update', args=[user_1.id])
+        url = reverse('profile_retrieve_update_delete', args=[user_1.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.put(url, body)
@@ -447,7 +447,7 @@ class ProfilesApiViewsTest(TestCase):
             "state": 'OL'
         }
 
-        url = reverse('profile_update', args=[user_1.id])
+        url = reverse('profile_retrieve_update_delete', args=[user_1.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.put(url, body)
@@ -464,7 +464,7 @@ class ProfilesApiViewsTest(TestCase):
         baker.make(Profile, user=user, phone='(925)-967-1402', address='8655 Frances Ct', city='Paris', state='FR',
                    zipcode='65487', available=True, img='https://randomuser.me/api/portraits/women/65.jpg')
 
-        url = reverse('profile_delete', args=[user.id])
+        url = reverse('profile_retrieve_update_delete', args=[user.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.delete(url)
@@ -485,7 +485,7 @@ class ProfilesApiViewsTest(TestCase):
         baker.make(Profile, user=user_1, phone='(925)-967-1402', address='8655 Frances Ct', city='Paris', state='FR',
                    zipcode='65487', available=True, img='https://randomuser.me/api/portraits/women/65.jpg')
 
-        url = reverse('profile_delete', args=[user_1.id])
+        url = reverse('profile_retrieve_update_delete', args=[user_1.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.delete(url)
@@ -504,7 +504,7 @@ class ProfilesApiViewsTest(TestCase):
         baker.make(Profile, user=user_1, phone='(925)-967-1402', address='8655 Frances Ct', city='Paris', state='FR',
                    zipcode='65487', available=True, img='https://randomuser.me/api/portraits/women/65.jpg')
 
-        url = reverse('profile_delete', args=[user_1.id])
+        url = reverse('profile_retrieve_update_delete', args=[user_1.id])
         http_auth = get_request_credentials(user)
         self.client.credentials(**http_auth)
         response = self.client.delete(url)

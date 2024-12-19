@@ -11,11 +11,9 @@ urlpatterns = [
     path('manager/<int:pk>/', views.AdminRetrieveUpdateDeleteUserApiView.as_view(),
          name='account_manager_retrieve_update_delete'),
 
-    path('profile/', views.ListProfileApiView.as_view(), name='profile_list'),
-    path('profile/create/', views.CreateProfileApiView.as_view(), name='profile_create'),
-    path('profile/<int:user_id>/', views.RetrieveProfileApiView.as_view(), name='profile_details'),
-    path('profile/update/<int:user_id>/', views.UpdateProfileApiView.as_view(), name='profile_update'),
-    path('profile/delete/<int:user_id>/', views.DestroyProfileApiView.as_view(), name='profile_delete'),
+    path('profile/', views.ListCreateProfileApiView.as_view(), name='profile_list_create'),
+    path('profile/<int:user_id>/', views.RetrieveUpdateDeleteProfileAPIView.as_view(),
+         name='profile_retrieve_update_delete'),
 
     path('friends/', views.ListCreateFriendApiView.as_view(), name='friend_list_create'),
     path('friends/<int:user_id>/', views.RetrieveFriendsApiView.as_view(), name='friends_profiles'),
